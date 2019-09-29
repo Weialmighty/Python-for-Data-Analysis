@@ -63,7 +63,7 @@ Out[1]:
  5: 1.7345376326386743,
  6: -0.9553103769648562}
 ```
-`randn()` Return a sample (or samples) from the ["standard normal" distribution](https://zh.wikipedia.org).
+`randn()` Return a sample (or samples) from the ["standard normal" distribution](https://en.wikipedia.org/wiki/Normal_distribution).
 ```python
 In[2]: 
 from numpy.random import randn
