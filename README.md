@@ -39,4 +39,136 @@ import pandas as pd
 import seaborn as sn
 import statsmodel as sm
 ```
-## Jargon（行话、术语）
+## **1.5 Jargon（行话、术语）**
+- *Munge/munging/wrangling*  
+Describes the overall process of manipulating unstructured and/or messy data into a structured or clean form. The word has snuck its way into the jargon of many modern-day data hackers. “Munge” rhymes with “grunge.”
+- *Psedocode*
+- *Syntactic sugar（语法糖）*  
+Programming syntax that does not add new features, but makes something more convenient or easier to type.  
+  
+
+# **CHAPTER2 Pyhton Language Basics**
+## **2.1 The Python Interpreter**
+```python
+In[1]: 
+import numpy as np
+data = {i : np.random.randn() for i in range(7)}
+data
+Out[1]: 
+{0: 0.26816922423129474,
+ 1: -0.751080185270001,
+ 2: -0.3923485657678745,
+ 3: 1.202910059919528,
+ 4: 0.9835632973769233,
+ 5: 1.7345376326386743,
+ 6: -0.9553103769648562}
+```
+`randn()` Return a sample (or samples) from the ["standard normal" distribution](https://zh.wikipedia.org).
+```python
+In[2]: 
+from numpy.random import randn
+data = {i : randn() for i in range(7)}
+data
+Out[2]: 
+{0: -0.0753720445222836,
+ 1: -0.6130818596072809,
+ 2: -1.3243342248501844,
+ 3: -0.9746658075656515,
+ 4: 0.7917487114501727,
+ 5: -0.5751811367566934,
+ 6: -1.0961269397945121}
+```
+### Introspection（自省）
+Using a question mark `?` before or after a variable will display some general information about the object:
+```python
+In[3]: 
+b = [1, 2, 3]
+b?
+Out[3]: 
+Type:        list
+String form: [1, 2, 3]
+Length:      3
+Docstring:  
+Built-in mutable sequence.
+
+If no argument is given, the constructor creates a new empty list.
+The argument must be an iterable if specified.
+```
+```python
+In[4]: 
+print?
+Out[4]: 
+Docstring:
+print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
+
+Prints the values to a stream, or to sys.stdout by default.
+Optional keyword arguments:
+file:  a file-like object (stream); defaults to the current sys.stdout.
+sep:   string inserted between values, default a space.
+end:   string appended after the last value, default a newline.
+flush: whether to forcibly flush the stream.
+Type:      builtin_function_or_method
+```
+Then using `?` shows us the docstring:
+```python
+In[5]: 
+def add_numbers(a, b):
+    """
+    Add Two numbers together
+    
+    Returns
+    
+    the sum : type of arguments
+    """
+    return a + b
+add_numbers?
+Out[5]: 
+Signature: add_numbers(a, b)
+Docstring:
+Add Two numbers together
+
+Returns
+
+the sum : type of arguments
+File:      ~/PycharmProjects/Data Science/<ipython-input-6-fb29343e0f5a>
+Type:      function
+```
+Using `??` will also show the function's source code if possible
+```python
+In[6]: 
+def add_numbers(a, b):
+    """
+    Add Two numbers together
+    
+    Returns
+    
+    the sum : type of arguments
+    """
+    return a + b
+add_numbers??
+Out[6]: 
+Signature: add_numbers(a, b)
+Source:   
+def add_numbers(a, b):
+    """
+    Add Two numbers together
+    
+    Returns
+    
+    the sum : type of arguments
+    """
+    return a + b
+File:      ~/PycharmProjects/Data Science/<ipython-input-6-fb29343e0f5a>
+Type:      function
+```
+`?` has a final usage: A number of characters combined with the wildcard（通配符）(*) will show all names matching the wildcard expression. For example, we could get a list of all functions in the top-level NumPy namespace containing load:
+```python
+In[7]: 
+np.*load*?
+Out[7]: 
+np.__loader__
+np.load
+np.loads
+np.loadtxt
+np.pkgload
+```
