@@ -172,3 +172,21 @@ np.loads
 np.loadtxt
 np.pkgload
 ```
+### The %run Command
+Suppose you had the following simple script stored in ipython_script_test.py:  
+You can execute this by passing the filename to %run
+In the Jupyter notebook, you may also use the related %load magic function, which imports a script into a code cell:
+**Interrupting running code**  
+Pressing Ctrl-C while any code is running, whether a script through %run or a longrunning command, will cause a KeyboardInterrupt to be raised. This will cause nearly all Python programs to stop immediately except in certain unusual cases.
+### Excuting Code from Clipboard
+If you are using the Jupyter notebook, you can copy and paste code into any code cell and execute it. It is also possible to run code from the clipboard in the IPython shell. Suppose you had the following code in some other application:
+```
+x = 5
+y = 7
+if x > 5:
+    x += 1
+    y = 8
+```
+The most foolproof methods are the %paste and %cpaste magic functions. %paste takes whatever text is in the clipboard and executes it as a single block in the shell:
+%cpaste is similar, except that it gives you a special prompt for pasting code into:  
+With the %cpaste block, you have the freedom to paste as much code as you like before executing it. You might decide to use %cpaste in order to look at the pasted code before executing it. If you accidentally paste the wrong code, you can break out of the %cpaste prompt by pressing Ctrl-C.
