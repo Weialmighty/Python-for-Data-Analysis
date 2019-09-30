@@ -46,7 +46,6 @@ Describes the overall process of manipulating unstructured and/or messy data int
 - *Syntactic sugar（语法糖）*  
 Programming syntax that does not add new features, but makes something more convenient or easier to type.  
   
-
 # **CHAPTER2 Pyhton Language Basics**
 ## **2.1 The Python Interpreter**
 ```python
@@ -221,3 +220,43 @@ Out[8]:
 [<matplotlib.lines.Line2D at 0x11a63b6a0>]
 ```
 ![](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/images/image8.png)
+## 2.3 Python Language Basis
+*Binary operators*  
+
+Operation | Description
+------------ | -------------
+a // b  | Floor-divide（整除） a by b, dropping any fractional remainder
+a ** b | Raise a to the b power
+a & b | True if both a and b are True; for integers, take the bitwise（按位、逐位） AND
+a \| b | True if either a or b is True; for integers, take the bitwise OR
+a ^ b| For booleans, True if a or b is True, but not both; for integers, take the bitwise EXCLUSIVE-OR
+### Control Flow
+#### if, elif, and else
+#### for loops
+#### while loops
+A `while` loop specifies a condition and a block of code that is to be excuted until the condition evaluates to `False` or the loop is explicitly ended with break:
+```python
+In[9]: 
+x = 256
+total = 0
+while x > 0:
+    if total > 500:
+        break
+    total += x
+    x = x // 2
+total
+Out[9]: 
+504
+```
+#### pass
+pass is the "no-op" statement in Python. It can be used in blocks where no action is to be taken (or as a placeholder for code not yet implemented); it is only required because Python uses whitespace to delimit（限定） blocks:
+#### range
+#### Ternary expression（三元表达式或三重表达式）
+A *ternary expression* in Python allows you to combine an `if-else` block that produces a value into a single line or expression. The syntax for this in Python is:
+```python
+value = true-expr if condition else false-expr
+```
+While it may be tempting to always use ternary expressions to condense（压缩，浓缩） your code,realize that you may sacrifice readability if the condition as well as the true and false expressions are very complex.  
+  
+# CHARPTER3 Bulit-in Data Structures, Functions, and Files
+
