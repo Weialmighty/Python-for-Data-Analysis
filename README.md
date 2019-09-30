@@ -190,3 +190,34 @@ if x > 5:
 The most foolproof methods are the %paste and %cpaste magic functions. %paste takes whatever text is in the clipboard and executes it as a single block in the shell:
 %cpaste is similar, except that it gives you a special prompt for pasting code into:  
 With the %cpaste block, you have the freedom to paste as much code as you like before executing it. You might decide to use %cpaste in order to look at the pasted code before executing it. If you accidentally paste the wrong code, you can break out of the %cpaste prompt by pressing Ctrl-C.
+### About Magic Commands
+*Some frequently used Ipython magic commands*  
+
+Command | Description
+------------ | -------------
+%magic | Display detailed documentation for all of the available magic comma
+%debug | Enter the interactive debugger at the bottom of the last exception traceback
+%hist | Print command input (and optionally output) history
+%pdb | Automatically enter debugger after any exception
+%paste | Execute preformatted Python code from clipboard
+%cpaste | Open a special prompt for manually pasting Python code to be executed
+%reset | Delete all variables/names defined in interactive namespace
+%page OBJECT | Pretty-print the object and display it through a pager
+%run script.py | Run a Python script inside IPython
+%prun statement | Execute statement with cProfile and report the profiler output
+%time statement | Report the execution time of a single statement
+%timeit statement | Run a statement multiple times to compute an ensemble average execution time; useful for timing code with very short execution time
+%who, %who_ls, %whos | Display variables defined in interactive namespace, with varying levels of information/verbosity
+%xdel variable | Delete a variable and attempt to clear any references to the object in the IPython internals
+### Matplotlib Integration
+In the IPython shell, running %matplotlib sets up the integration so you can create multiple plot windows without interfering with the console session, In Jupyter, the command is a little different:
+```python
+In[8]: 
+%matplotlib inline
+import numpy as np
+import matplotlib.pyplot as plt
+plt.plot(np.random.randn(50).cumsum())
+Out[8]: 
+[<matplotlib.lines.Line2D at 0x11a63b6a0>]
+```
+![](https://octodex.github.com/images/yaktocat.png)
