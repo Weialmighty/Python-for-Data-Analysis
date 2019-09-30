@@ -220,4 +220,4 @@ plt.plot(np.random.randn(50).cumsum())
 Out[8]: 
 [<matplotlib.lines.Line2D at 0x11a63b6a0>]
 ```
-![](https://octodex.github.com/images/yaktocat.png)
+![](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/images/image8.png)
