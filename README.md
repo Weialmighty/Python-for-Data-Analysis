@@ -300,7 +300,7 @@ Out[14]:
 ('foo', 'bar', 'foo', 'bar', 'foo', 'bar', 'foo', 'bar')
 ```
 **Note that the objects themselves are not copied, only the references to them.**
-### Unpacking tuples
+#### Unpacking tuples
 If you try to assign to a tuple-like expression of variables, Python will attempt to unpack the value on the righthand side of the equals sign:
 ```python
 In[15]: 
@@ -341,14 +341,109 @@ a=1, b=2, c=3
 a=4, b=5, c=6
 a=7, b=8, c=9
 ```
-The Python language recently acquired some more advanced tuple unpacking to help with situations where you may want to “pluck”（采摘） a few elements from the beginning of a tuple. This uses the special syntax *rest, which is also used in function signatures to capture an arbitrarily（任意地） long list of positional arguments:
+The Python language recently acquired some more advanced tuple unpacking to help with situations where you may want to “pluck”（采摘） a few elements from the beginning of a tuple. This uses the special syntax `*rest`, which is also used in function signatures to capture an arbitrarily（任意地） long list of positional arguments:
 ```python
-In[18]: 
-seq = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
-for a, b, c in seq: 
-    print('a={0}, b={1}, c={2}'.format(a, b, c))
-Out[18]: 
-a=1, b=2, c=3
-a=4, b=5, c=6
-a=7, b=8, c=9
+In[19]: 
+values = 1, 2, 3, 4,5
+a, b, *rest = values
+a, b
+rest
+Out[19]: 
+(1, 2)
+[3, 4, 5]
 ```
+This `rest` bit is sometimes something you want to discard; there is nothing special about the `rest` name. As a matter of convention, many Python programmers will use the underscore `_` for unwanted variables:
+```python
+In[20]: 
+values = 1, 2, 3, 4,5
+a, b, *_ = values
+a, b
+_
+Out[20]: 
+(1, 2)
+[3, 4, 5]
+```
+##### Tuple methods
+Since the size and contents of a tuple cannot be modified, it is very light on instance methods. A particularly useful one (also available on lists) is count, which counts the number of occurrences of a value:
+```python
+In[21]: 
+a = (1, 2, 2, 2, 3, 4, 2)
+a.count(2)
+Out[21]: 
+4
+```
+### List
+In contrast with tuples, lists are variable-length and their contents can be modified in-place. You can define them using square brackets [] or using the list type function.
+The `list` function is frequently used in data processing as a way to materialize（实现） an iterator（迭代） or generator expression:
+```python
+In[21]: 
+gen = range(10)
+gen
+Out[21]: 
+range(0, 10)
+In[22]: 
+list(gem)
+Out[22]: 
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+#### Adding and removing elements
+`append(element)`, `insert(index, element)`
+`insert` is computationally expensive compared with `append`, because references to subsequent elements have to be shifted internally to make room for the new element. If you need to insert elements at both the beginning and end of a sequence, you may wish to explore `collections.deque`, a double-ended queue, for this purpose.
+The inverse operation to `insert` is `pop`, which removes and returns an element at a particular index.
+Elements can be removed by value with `remove`, which locates the first such value and removes it from the last.
+#### Concatenating and combining lists
+If you have a list already defined, you can append multiple elements to it using the extend method:
+```python
+In[23]: 
+x = [4, None, 'foo']
+x.extend([7, 8, (2, 3)])
+x
+Out[23]: 
+[4, None, 'foo', 7, 8, (2, 3)]
+```  
+**Note that list concatenation by addition is a comparatively expensive operation since a new list must be created and the objects copied over. Using extend to append elements to an existing list, especially if you are building up a large list, is usually preferable.**
+#### Sorting
+You can sort a list in-place (without creating a new object) by calling its `sort` function:
+```python
+In[24]: 
+a = [7, 2, 5, 1, 3]
+a.sort()
+a
+Out[24]: 
+[1, 2, 3, 5, 7]
+``` 
+sort has a few options that will occasionally come in handy（便利）. One is the ability to pass a secondary sort `key`—that is, a function that produces a value to use to sort the objects. For example, we could sort a collection of strings by their lengths:
+```python
+In[25]: 
+b = ['saw', 'small', 'He', 'foxes', 'six']
+b.sort(key=len)
+b
+Out[25]: 
+['He', 'saw', 'six', 'small', 'foxes']
+``` 
+#### Binary search and maintaining a sorted list
+The built-in `bisect` module implements binary search and insertion into a sorted list. `bisect.bisect` finds the location where an element should be inserted to keep it sorted, while `bisect.insort` actually inserts the element into that location:
+```python
+In[26]: 
+import bisect
+c = [1, 2, 2, 2, 3, 4, 7]
+bisect.bisect(c, 2)
+Out[26]: 
+4
+In[27]: 
+bisect.insort(c, 6)
+c
+Out[27]: 
+[1, 2, 2, 2, 3, 4, 6, 7]
+``` 
+**The `bisect` module functions do not check whether the list is sorted, as doing so would be computationally expensive. Thus, using them with an unsorted list will succeed without error but may lead to incorrect results.**
+#### Slicing
+Slices can also be assigned to with a sequence:
+```python
+In[28]: 
+seq = [7, 2, 3, 7, 5, 6, 0, 1]
+seq[3:4] = [6, 3]
+seq
+Out[28]: 
+[7, 2, 3, 6, 3, 5, 6, 0, 1]
+``` 
