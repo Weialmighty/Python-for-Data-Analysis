@@ -259,4 +259,96 @@ value = true-expr if condition else false-expr
 While it may be tempting to always use ternary expressions to condense（压缩，浓缩） your code,realize that you may sacrifice readability if the condition as well as the true and false expressions are very complex.  
   
 # CHARPTER3 Bulit-in Data Structures, Functions, and Files
-
+## Data Structure and Sequences
+### Tuple
+A tuple is a fixed-length, immutable sequence of Python objects. The easiest way to create one is with a comma-separated sequence of values.
+You can convert any sequence or iterator to a tuple by invoking tuple:
+```python
+In[10]: 
+tuple([4, 0, 2])
+Out[10]: 
+(4, 0, 2)
+In[11]: 
+tup = tuple('string')
+tup
+Out[11]: 
+('s', 't', 'r', 'i', 'n', 'g')
+```
+Elements can be accessed with square brackets `[]` as with most other sequence types. As in  C, C++, Java, and many other languages, sequences are 0-indexed in Python.
+While the objects stored in a tuple may be mutable themselves, once the tuple is created it’s not possible to modify which object is stored in each slot.
+If an object inside a tuple is mutable, such as a list, you can modify it in-place:
+```python
+In[12]: 
+tup = tuple(['foo', [1, 2], True])
+tup[1].append(3)
+tup
+Out[12]: 
+('foo', [1, 2, 3], True)
+```
+You can concatenate tuples using the `+` operator to produce longer tuples:(**Notice ('bar',)**)
+```python
+In[13]: 
+(4, None, 'foo') + (6, 0) + ('bar',)
+Out[13]: 
+(4, None, 'foo', 6, 0, 'bar')
+```
+Multiplying a tuple by an integer, as with lists, has the effect of concatenating（串联） together that many copies of the tuple:
+```python
+In[14]: 
+('foo', 'bar') * 4
+Out[14]: 
+('foo', 'bar', 'foo', 'bar', 'foo', 'bar', 'foo', 'bar')
+```
+**Note that the objects themselves are not copied, only the references to them.**
+### Unpacking tuples
+If you try to assign to a tuple-like expression of variables, Python will attempt to unpack the value on the righthand side of the equals sign:
+```python
+In[15]: 
+tup = (4, 5, 6)
+a, b, c = tup
+b
+Out[15]: 
+5
+```
+Even sequences with nested tuples can be unpacked:
+```python
+In[16]: 
+tup = 4, 5, (6, 7)
+a, b, (c, d) = tup
+d
+Out[16]: 
+7
+```
+In Python, the swap variable names can be done like this:
+```python
+In[17]: 
+a, b = 1, 2
+b, a = a, b
+a
+b
+Out[17]: 
+2
+1
+```
+A common use of variable unpacking is iterating over（遍历） sequences of tuples or lists:
+```python
+In[18]: 
+seq = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
+for a, b, c in seq: 
+    print('a={0}, b={1}, c={2}'.format(a, b, c))
+Out[18]: 
+a=1, b=2, c=3
+a=4, b=5, c=6
+a=7, b=8, c=9
+```
+The Python language recently acquired some more advanced tuple unpacking to help with situations where you may want to “pluck”（采摘） a few elements from the beginning of a tuple. This uses the special syntax *rest, which is also used in function signatures to capture an arbitrarily（任意地） long list of positional arguments:
+```python
+In[18]: 
+seq = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
+for a, b, c in seq: 
+    print('a={0}, b={1}, c={2}'.format(a, b, c))
+Out[18]: 
+a=1, b=2, c=3
+a=4, b=5, c=6
+a=7, b=8, c=9
+```
