@@ -532,7 +532,7 @@ pitchers = [('Nolan', 'Ryan'), ('Roger', 'Clemens'),('Schilling', 'Curt')]
 first_names, last_names = zip(*pitchers)
 first_names
 last_names
-Out[35]: 
+Out[36]: 
 ('Nolan', 'Roger', 'Schilling')
 ('Ryan', 'Clemens', 'Curt')
 ``` 
@@ -546,4 +546,132 @@ Out[37]:
 ``` 
 Keep in mind that `reversed` is a generator (to be discussed in some more detail later), so it does not create the reversed sequence until materialized (e.g., with `list` or a `for` loop).
 ### dict
-You can access, insert, or set elements using the same syntax as for accessing elements of a list or tuple:
+You can access, insert, or set elements using the same syntax as for accessing elements of a list or tuple. You can delete values either using the `del` keyword or the `pop` method (which simultaneously returns the value and deletes the key):
+```python
+In [38]: 
+d1 = {'a' : 'some value', 'b' : [1, 2, 3, 4]}
+d1[5] = 'some value'
+d1['dummy'] = 'another value'
+ret = d1.pop('dummy')
+ret
+Out[38]: 
+'another value'
+``` 
+The `keys` and `values` method give you iterators of the dict’s keys and values, respectively. While the key-value pairs are not in any particular order, these functions output the keys and values in the same order:
+```python
+In [39]: 
+list(d1.keys())
+Out[39]: 
+['a', 'b', 5]
+In [40]: 
+list(d1.values())
+Out[40]: 
+['some value', [1, 2, 3, 4], 'some value']
+``` 
+You can merge one dict into another using the `update` method:
+```python
+In [41]: 
+d1.update({'b' : 'foo', 'c' : 12})
+Out[41]: 
+{'a': 'some value', 'b': 'foo', 5: 'some value', 'c': 12}
+``` 
+The `update` method changes dicts in-place, so any existing keys in the data passed to
+update will have their old values discarded.
+#### Creating dicts from sequences
+Since a dict is essentially a collection of 2-tuples, the `dict` function accepts a list of 2-tuples:
+```python
+In [42]: 
+m = zip(range(5), reversed(range(5)))
+list(m)
+Out[42]: 
+[(0, 4), (1, 3), (2, 2), (3, 1), (4, 0)]
+``` 
+```python
+In [43]: 
+mapping = dict(zip(range(5), reversed(range(5))))
+mapping
+Out[43]: 
+{0: 4, 1: 3, 2: 2, 3: 1, 4: 0}
+``` 
+#### Default values
+`get` by default will return `None` if the key is not present, while `pop` will raise an exception. With setting values, a common case is for the values in a dict to be other collections, like lists. For example, you could imagine categorizing a list of words by their first letters as a dict of lists:
+```python
+In [44]: 
+words = ['apple', 'bat', 'bar', 'atom', 'book']
+by_letter = {}
+for word in words:
+    letter = word[0]
+    if letter not in by_letter:
+        by_letter[letter] = [word]
+    else:
+        by_letter[letter].append(word)
+by_letter
+Out[44]: 
+{'a': ['apple', 'atom'], 'b': ['bat', 'bar', 'book']}
+``` 
+The `setdefault` dict method is for precisely this purpose. The preceding `for` loop
+can be rewritten as:
+```python
+for word in words:
+    letter = word[0]
+    by_letter.setdefault(letter, []).append(word)
+``` 
+The built-in collections module has a useful class, defaultdict, which makes this even easier. To create one, you pass a type or function for generating the default value for each slot in the dict:
+```python
+from collections import defaultdict
+by_letter = defaultdict(list)
+for word in words:
+    by_letter[word[0]].append(word)
+``` 
+#### Valid dict key types
+While the values of a dict can be any Python object, the keys generally have to be immutable objects like scalar types (int, float, string 标量) or tuples (all the objects in the tuple need to be immutable, too). The technical term here is hashability 散列性. You can check whether an object is hashable (can be used as a key in a dict() with the `hash` function:
+```python
+In [45]: 
+hash('string')
+Out[45]: 
+-4749600703255240290
+In [46]: 
+hash((1, 2, (2, 3)))
+Out[46]: 
+1097636502276347782
+In [47]: 
+hash((1, 2, [2, 3]))
+Out[47]: 
+TypeError                                 Traceback (most recent call last)
+<ipython-input-29-8ffc25aff872> in <module>
+----> 1 hash((1, 2, [2, 3]))
+
+TypeError: unhashable type: 'list'
+``` 
+To use a list as a key, one option is to convert it to a tuple, which can be hashed as long as its elements also can:
+```python
+In [48]: 
+d = {}
+d[tuple([1, 2, 3])] = 5
+d
+Out[48]: 
+{(1, 2, 3): 5}
+``` 
+### set
+A set is an unordered collection of unique elements. You can think of them like dicts, but keys only, no values. A set can be created in two ways: via the set function or via a set literal with curly braces花括号:
+```python
+In [49]: 
+set([2, 2, 2, 1, 3, 3])
+Out[49]: 
+{1, 2, 3}
+In [50]: 
+{2, 2, 2, 1, 3, 3}
+Out[50]: 
+{1, 2, 3}
+``` 
+Sets support mathematical set operations like union, intersection, difference, and
+symmetric difference. The union of these two sets is the set of distinct elements occurring in either set. This can be computed with either the `union` method or the | binary operator:
+```python
+In [51]: 
+a = {1, 2, 3, 4, 5}
+b = {3, 4, 5, 6, 7, 8}
+a.union(b)
+a | b
+Out[51]: 
+{1, 2, 3, 4, 5, 6, 7, 8}
+``` 
