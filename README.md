@@ -675,3 +675,29 @@ a | b
 Out[51]: 
 {1, 2, 3, 4, 5, 6, 7, 8}
 ``` 
+The intersection contains the elements occurring in both sets. The & operator or the intersection method can be used:
+```python
+In [52]: 
+a = {1, 2, 3, 4, 5}
+b = {3, 4, 5, 6, 7, 8}
+a.intersection(b)
+a & b
+Out[52]: 
+{3, 4, 5}
+``` 
+*Commonly Used Set Methods*  
+
+Function | Alternative syntax | Description
+------------ | ------------- | -------------
+a.union(b) | a \| b | All of the unique elements in a and b
+a.update(b) | a |= b | Set the contents of a to be the union of the elements in a and b
+a.intersection(b) | a & b | All of the elements in both a and b
+a.intersection_update(b) | a &= b | Set the contents of a to be the intersection of the elements in a and b
+a.difference(b) | a - b | The elements in a that are not in b
+a.difference_update(b) | a -= b | Set a to the elements in a that are not in b
+a.symmetric_difference(b) | a ^ b | All of the elements in either a or b but not both（交集的补集）
+a.symmetric_difference_update(b) | a ^= b | Set a to contain the elements in either a or b but not both
+a.issubset(b) | N/A | True if the elements of a are all contained in b
+a.issuperset(b) | N/A | True if the elements of b are all contained in a
+a.isdisjoint(b) | N/A | True if a and b have no elements in common 
+All of the logical set operations have in-place counterparts, which enable you to replace the contents of the set on the left side of the operation with the result. For very large sets, this may be more efficient:
