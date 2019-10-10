@@ -699,5 +699,34 @@ a.symmetric_difference(b) | a ^ b | All of the elements in either a or b but not
 a.symmetric_difference_update(b) | a ^= b | Set a to contain the elements in either a or b but not both
 a.issubset(b) | N/A | True if the elements of a are all contained in b
 a.issuperset(b) | N/A | True if the elements of b are all contained in a
-a.isdisjoint(b) | N/A | True if a and b have no elements in common 
-All of the logical set operations have in-place counterparts, which enable you to replace the contents of the set on the left side of the operation with the result. For very large sets, this may be more efficient:
+a.isdisjoint(b) | N/A | True if a and b have no elements in common  
+All of the logical set operations have in-place counterparts, which enable you to replace the contents of the set on the left side of the operation with the result. For very large sets, this may be more efficient.
+Sets are equal if and only if their contents are equal:
+```python
+In [53]: 
+{1, 2, 3} == {3, 2, 1}
+Out[53]: 
+True
+``` 
+## List, Set, and Dict Comprehensions
+*List comprehensions* are one of the most-loved Python language features. They allow you to concisely form a new list by filtering the elements of a collection, transforming the elements passing the filter in one concise expression. They take the basic form:
+```[expr for val in collection if condition]```
+This is equivalent to the following for loop:
+```python
+result = []
+for val in collection:
+    if condition:
+        result.append(expr)
+``` 
+For example, given a list of strings, we could filter out strings with length 2 or less and also convert them to uppercase like this:
+```python
+In [54]: 
+strings = ['a', 'as', 'bat', 'car', 'dove', 'python']
+[x.upper() for x in strings if len(x) > 2]
+Out[54]: 
+['BAT', 'CAR', 'DOVE', 'PYTHON']
+``` 
+Set and dict comprehensions are a natural extension, producing sets and dicts in an  idiomatically similar way instead of lists. A dict comprehension looks like this:
+```dict_comp = {key-expr : value-expr for value in collection if condition}```
+A set comprehension looks like the equivalent list comprehension except with curly braces instead of square brackets:
+```set_comp = {expr for value in collection if condition}```
