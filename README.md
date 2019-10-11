@@ -708,7 +708,7 @@ In [53]:
 Out[53]: 
 True
 ``` 
-## List, Set, and Dict Comprehensions
+### List, Set, and Dict Comprehensions
 *List comprehensions* are one of the most-loved Python language features. They allow you to concisely form a new list by filtering the elements of a collection, transforming the elements passing the filter in one concise expression. They take the basic form:
 ```[expr for val in collection if condition]```
 This is equivalent to the following for loop:
@@ -730,3 +730,110 @@ Set and dict comprehensions are a natural extension, producing sets and dicts in
 ```dict_comp = {key-expr : value-expr for value in collection if condition}```
 A set comprehension looks like the equivalent list comprehension except with curly braces instead of square brackets:
 ```set_comp = {expr for value in collection if condition}```
+Suppose we wanted a set containing just the lengths of the strings contained in the collection; we could easily compute this using a set comprehension:
+```python
+In [55]: 
+unique_lengths = {len(x) for x in strings}
+unique_lengths
+Out[55]: 
+{1, 2, 3, 4, 6}
+``` 
+We could also express this more functionally using the `map` function(*Make an iterator that computes the function using arguments from each of the iterables.  Stops when the shortest iterable is exhausted.*), introduced shortly:
+```python
+In [56]: 
+set(map(len, strings))
+Out[56]: 
+{1, 2, 3, 4, 6}
+``` 
+As a simple dict comprehension example, we could create a lookup map of these strings to their locations in the list:
+```python
+In [57]: 
+loc_mapping = {val : index for index, val in enumerate(strings)}
+loc_mapping
+Out[57]: 
+{'a': 0, 'as': 1, 'bat': 2, 'car': 3, 'dove': 4, 'python': 5}
+``` 
+#### Nested list comprehensions
+Suppose we have a list of lists containing some English and Spanish names:
+Now, suppose we wanted to get a single list containing all names with two or more e’s in them. We could certainly do this with a simple `for` loop:
+```python
+names_of_interest = []
+for names in all_data:
+    enough_es = [name for name in names if name.count('e') >= 2]
+    names_of_interest.extend(enough_es)
+``` 
+You can actually wrap this whole operation up in a single nested list comprehension, which will look like:
+```python
+In [58]: 
+result = [name for names in all_data for name in names if name.count('e') >= 2]
+result
+Out[58]: 
+['Steven']
+``` 
+At first, nested list comprehensions are a bit hard to wrap your head around. The for parts of the list comprehension are arranged according to the order of nesting, and any filter condition is put at the end as before. Here is another example where we “flatten” a list of tuples of integers into a simple list of integers:
+```python
+In [59]: 
+some_tuples = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
+flattened = [x for tup in some_tuples for x in tup]
+flattened
+Out[59]: 
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+``` 
+You can have arbitrarily many levels of nesting, though if you have more than two or three levels of nesting you should probably start to question whether this makes sense from a code readability standpoint. It’s important to distinguish the syntax just shown from a list comprehension inside a list comprehension, which is also perfectly valid:
+```python
+In [60]: 
+[[x for x in tup] for tup in some_tuples]
+Out[60]: 
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+``` 
+This produces a list of lists, rather than a flattened（扁平化）list of all of the inner elements.
+## 3.2 Functions
+**There is no issue with having multiple `return` statements. If Python reaches the end of a function without encountering a `return` statement, `None` is returned automatically.**
+Each function can have positional arguments and keyword arguments. Keyword arguments are most commonly used to specify default values or optional arguments.
+### Namespaces, Scope, and Local Functions
+Functions can access variables in two different scopes: global and local. An alternative and more descriptive name describing a variable scope in Python is a namespace. Any variables that are assigned within a function by default are assigned to the local namespace. The local namespace is created when the function is called and immediately populated by（由...填充）the function’s arguments. After the function is finished, the local namespace is destroyed (with some exceptions that are outside the purview 范围 of this chapter). Consider the following function:
+```python
+def func():
+    a = []
+    for i in range(5):
+        a.append(i)
+``` 
+When `func()` is called, the empty list a is created, five elements are appended, and then a is destroyed when the function exits. Suppose instead we had declared a as follows:
+```python
+a = []
+def func():
+    for i in range(5):
+        a.append(i)
+``` 
+**Assigning variables outside of the function’s scope is possible, but those variables must be declared as global via the `global` keyword:**
+```python
+a = None
+def bind_a_variable():
+    global a
+    a = []
+bind_a_variable()
+``` 
+I generally discourage use of the `global` keyword. Typically global variables are used to store some kind of state in a system. If you find yourself using a lot of them, it may indicate a need for objectoriented programming (using classes).
+### Returning Multiple Values
+When I first programmed in Python after having programmed in Java and C++, one of my favorite features was the ability to return multiple values from a function with simple syntax. Here’s an example:
+```python
+def f():
+    a = 5
+    b = 6
+    c = 7
+    return a, b, c
+a, b, c = f()
+``` 
+In data analysis and other scientific applications, you may find yourself doing this often. What’s happening here is that the function is actually just returning one object, namely a tuple, which is then being unpacked into the result variables. In the preceding example, we could have done this instead:
+```python
+return_value = f()
+``` 
+In this case, `return_value` would be a 3-tuple with the three returned variables. A potentially attractive alternative to returning multiple values like before might be to return a dict instead:
+```python
+def f():
+    a = 5
+    b = 6
+    c = 7
+    return {'a' : a, 'b' : b, 'c' : c}
+``` 
+This alternative technique can be useful depending on what you are trying to do.
