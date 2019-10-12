@@ -837,3 +837,97 @@ def f():
     return {'a' : a, 'b' : b, 'c' : c}
 ``` 
 This alternative technique can be useful depending on what you are trying to do.
+### Functions Are Objects
+Suppose we were doing some data cleaning and needed to apply a bunch of transformations to the following list of strings:
+```python
+states = [' Alabama ', 'Georgia!', 'Georgia', 'georgia', 'FlOrIda', 'south carolina##', 'West virginia?']
+``` 
+Anyone who has ever worked with user-submitted survey data has seen messy results like these. Lots of things need to happen to make this list of strings uniform and ready for analysis: stripping whitespace, removing punctuation symbols, and standardizing on proper capitalization. One way to do this is to use built-in string methods along with the `re` standard library module for regular expressions:
+```python
+import re
+def clean_strings(strings):
+    result = []
+    for value in strings:
+        value = value.strip() # Remove leading and trailing spaces
+        value = re.sub('[!#?]', '', value) # Replace '!#?' with '' in value
+        value = value.title()
+        result.append(value)
+    return result
+In [61]: 
+clean_strings(states)
+Out[61]: 
+['Alabama',
+'Georgia',
+'Georgia',
+'Georgia',
+'Florida',
+'South Carolina',
+'West Virginia']
+``` 
+An alternative approach that you may find useful is to make a list of the operations you want to apply to a particular set of strings:
+```python
+def remove_punctuation(value):
+    return re.sub('[!#?]', '', value)
+clean_ops = [str.strip, remove_punctuation, str.title]
+def clean_strings(strings, ops):
+    result = []
+    for value in strings:
+        for function in ops:
+        value = function(value)
+    result.append(value)
+return result
+``` 
+A more functional pattern like this enables you to easily modify how the strings are transformed at a very high level. The `clean_strings` function is also now more reusable and generic(可重用的和通用的).
+You can use functions as arguments to other functions like the built-in `map`(map() 会根据提供的函数对指定序列做映射。第一个参数 function 以参数序列中的每一个元素调用 function 函数，返回包含每次 function 函数返回值的新列表。) function, which applies a function to a sequence of some kind:
+```python
+In [62]:
+for x in map(remove_punctuation, states):
+    print(x)
+Out[62]: 
+Alabama
+Georgia
+Georgia
+georgia
+FlOrIda
+south carolina
+West virginia
+``` 
+### Anonymous(Lambada) Functions 无名函数
+Python has support for so-called *anonymous or lambda functions*, which are a way of writing functions consisting of a single statement, the result of which is the return value. They are defined with the `lambda` keyword, which has no meaning other than “we are declaring an anonymous function”:
+```python
+def short_function(x):
+    return x * 2
+equiv_anon = lambda x: x * 2
+``` 
+For example, consider this silly example:
+```python
+def apply_to_list(some_list, f):
+    return [f(x) for x in some_list]
+ints = [4, 0, 1, 5, 6]
+apply_to_list(ints, lambda x: x * 2)
+```
+You could also have written `[x * 2 for x in ints]`, but here we were able to succinctly(简洁地) pass a custom operator to the `apply_to_list` function.
+As another example, suppose you wanted to sort a collection of strings by the number of distinct letters(不同的字母个数) in each string:
+```python
+In [63]:
+strings = ['foo', 'card', 'bar', 'aaaa', 'abab']
+strings.sort(key=lambda x: len(set(list(x)))) # set() 函数创建一个无序不重复元素集
+Out[63]: 
+['aaaa', 'foo', 'abab', 'bar', 'card']
+```
+### Currying: Partial Argument Application
+*Currying* is computer science jargon (named after the mathematician Haskell Curry) that means deriving new functions from existing ones by partial argument application. For example, suppose we had a trivial function(不重要的函数) that adds two numbers together:
+```python
+def add_numbers(x, y):
+    return x + y
+```
+Using this function, we could derive a new function of one variable `add_five`, that adds 5 to its argument:
+```python
+add_five = lambda y: add_numbers(5, y)
+```
+The second argument to `add_numbers` is said to be curried. There’s nothing very fancy here, as all we’ve really done is define a new function that calls an existing function. The built-in `functools` module can simplify this process using the `partial` function:
+```python
+from functools import partial
+add_five = partial(add_numbers, 5)
+```
+### Generators
