@@ -1085,3 +1085,44 @@ finally:
 **AssertionError:**
 Having additional context by itself is a big advantage over the standard Python interpreter (which does not provide any additional context). You can control the amount of context shown using the %xmode magic command, from Plain (same as the standard Python interpreter) to Verbose (which inlines function argument values and more). As you will see later in the chapter, you can step into the stack (using the %debug or %pdb magics) after an error has occurred for interactive post-mortem debugging.
 ## 3.3 Files and the Operating System
+Most of this book uses high-level tools like `pandas.read_csv` to read data files from disk into Python data structures. However, it’s important to understand the basics of how to work with files in Python. Fortunately, it’s very simple, which is one reason why Python is so popular for text and file munging.
+To open a file for reading or writing, use the built-in open function with either a relative or absolute file path:
+```python
+path = '/Users/levil/PycharmProjects/Data Science/segismundo.txt'
+f = open(path)
+```
+By default, the file is opened in read-only mode `'r'`. We can then treat the file handle `f` like a list and iterate over the lines like so:
+```python
+for line in f:
+    pass
+```
+The lines come out of the file with the end-of-line (EOL) markers intact, so you’ll often see code to get an EOL-free list of lines in a file like:
+```python
+In [75]:
+lines = [x.rstrip() for x in open(path)]
+lines
+Out[75]: 
+['Sueña el rico en su riqueza,',
+ 'que más cuidados le ofrece;',
+ '',
+ 'sueña el pobre que padece',
+ 'su miseria y su pobreza;',
+ '',
+ 'sueña el que a medrar empieza,',
+ 'sueña el que afana y pretende,',
+ 'sueña el que agravia y ofende,',
+ '',
+ 'y en el mundo, en conclusión,',
+ 'todos sueñan lo que son,',
+ 'aunque ninguno lo entiende.',
+ '']
+```
+When you use `open` to create file objects, it is important to explicitly close the file when you are finished with it. Closing the file releases its resources back to the operating system:
+```python
+f.close()
+```
+**One of the ways to make it easier to clean up open files is to use the `with` statement:**
+```python
+with open(path) as f:
+    lines = [x.rstrip() for x in f]
+```
