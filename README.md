@@ -1126,3 +1126,125 @@ f.close()
 with open(path) as f:
     lines = [x.rstrip() for x in f]
 ```
+This will automatically close the file f when exiting the `with` block.
+If we had typed f = open(path, 'w'), a new file at examples/segismundo.txt would have been created (be careful!), overwriting any one in its place. There is also the 'x' file mode, which creates a writable file but fails if the file path already exists.
+*Python file modes*
+
+
+Mode | Description
+------------ | -------------
+r | Read-only mode
+w | Write-only mode; creates a new file (erasing the data for any file with the same name)
+x | Write-only mode; creates a new file, but fails if the file path already exists
+a | Append to existing file (create the file if it does not already exist)
+r+ | Read and write
+b | Add to mode for binary files (i.e., `'rb'` or `'wb'`)
+t | Text mode for files (automatically decoding bytes to Unicode). This is the default if not specified. Add t to other modes to use this (i.e., `'rt'` or `'xt'`)
+For readable files, some of the most commonly used methods are `read`, `seek`, and `tell`. `read` returns a certain number of characters from the file. What constitutes a “character” is determined by the file’s encoding (e.g., UTF-8) or simply raw bytes if the file is opened in binary mode:
+```python
+In [76]:
+f = open(path)
+f.read(10)
+Out[76]: 
+'Sueña el r'
+In [77]:
+f2 = open(path, 'rb') # Binary mode
+f2.read(10)
+Out[77]: 
+b'Sue\xc3\xb1a el '
+```
+The `read` method advances the file handle’s position by the number of bytes read.
+`tell` gives you the current position:
+```python
+In [78]:
+f.tell()
+Out[78]: 
+11
+In [79]:
+f2.tell()
+Out[79]: 
+10
+```
+Even though we read 10 characters from the file, the position is 11 because it took that many bytes to decode 10 characters using the default encoding. You can check the default encoding in the `sys` module:
+```python
+In [80]:
+import sys
+sys.getdefaultencoding()
+Out[80]: 
+'utf-8'
+```
+`seek` changes the file position to the indicated byte in the file:
+```python
+In [81]:
+f.seek(3)
+Out[81]: 
+3
+In [82]:
+f.read(1)
+Out[82]: 
+'ñ'
+```
+Lastly, we remember to close the files.
+To write text to a file, you can use the file’s `write` or `writelines` methods. For example, we could create a version of prof_mod.py with no blank lines like so:
+```python
+In [82]:
+with open('tmp.txt', 'w') as handle:
+    handle.writelines(x for x in open(path) if len(x) > 1)
+with open('tmp.txt') as f:
+    lines = f.readlines()
+lines
+Out[82]: 
+['Sueña el rico en su riqueza,\n',
+ 'que más cuidados le ofrece;\n',
+ 'sueña el pobre que padece\n',
+ 'su miseria y su pobreza;\n',
+ 'sueña el que a medrar empieza,\n',
+ 'sueña el que afana y pretende,\n',
+ 'sueña el que agravia y ofende,\n',
+ 'y en el mundo, en conclusión,\n',
+ 'todos sueñan lo que son,\n',
+ 'aunque ninguno lo entiende.\n']
+```
+*Important Python file methods or attributes*  
+Mode | Description
+------------ | -------------
+read(\[size]) | Return data from file as a string, with optional `size` argument indicating the number of bytes to read
+readlines(\[size]) | Return list of lines in the file, with optional `size` argument
+write(str) | Write passed string to file
+writelines(strings) | Write passed sequence of strings to the file
+close() | Close the handle
+flush() | Flush the internal I/O buffer to disk
+seek(pos) | Move to indicated file position (integer)
+tell() | Return current file position as integer
+closed | `True` if the file is closed
+### Bytes and Unicode with Files
+The default behavior for Python files (whether readable or writable) is text mode, which means that you intend to work with Python strings (i.e., Unicode). This contrasts with binary mode, which you can obtain by appending b onto the file mode. Let’s look at the file (which contains non-ASCII characters with UTF-8 encoding) from the previous section:
+UTF-8 is a variable-length Unicode encoding, so when I requested some number of characters from the file, Python reads enough bytes (which could be as few as 10 or as many as 40 bytes) from the file to decode that many characters. If I open the file in `'rb'` mode instead, `read` requests exact numbers of bytes:
+```python
+In [83]:
+with open(path, 'rb') as f:
+    data = f.read(10)
+data
+Out[83]: 
+b'Sue\xc3\xb1a el '
+```
+Depending on the text encoding, you may be able to decode the bytes to a `str` object yourself, but only if each of the encoded Unicode characters is fully formed:
+```python
+In [84]:
+data.decode('utf8')
+Out[84]: 
+'Sueña el '
+In [85]:
+data[:4].decode('utf8')
+Out[85]: 
+---------------------------------------------------------------------------
+UnicodeDecodeError                        Traceback (most recent call last)
+<ipython-input-16-0ad9ad6a11bd> in <module>
+----> 1 data[:4].decode('utf8')
+
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xc3 in position 3: unexpected end of data
+```
+Text mode, combined with the `encoding` option of open, provides a convenient way to convert from one Unicode encoding to another:
+Beware using seek when opening files in any mode other than binary. If the file position falls in the middle of the bytes defining a Unicode character, then subsequent reads will result in an error.
+## 3.4 Conclusion
+With some of the basics and the Python environment and language now under our belt, it’s time to move on and learn about NumPy and array-oriented computing in Python.
