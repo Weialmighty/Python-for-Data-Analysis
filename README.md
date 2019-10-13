@@ -931,3 +931,157 @@ from functools import partial
 add_five = partial(add_numbers, 5)
 ```
 ### Generators
+Having a consistent way to iterate(重复) over sequences, like objects in a list or lines in a file, is an important Python feature. This is accomplished by means of the iterator protocol, a generic way to make objects iterable. For example, iterating over a dict yields the dict keys:
+```python
+In [64]:
+some_dict = {'a': 1, 'b': 2, 'c': 3}
+for key in some_dict:
+    print(key)
+Out[64]: 
+a
+b
+c
+```
+When you write `for key in some_dict`, the Python interpreter first attempts to create an iterator out of `some_dict`:
+```python
+In [65]:
+dict_iterator = iter(some_dict)
+dict_iterator
+list(dict_iterator)
+Out[65]: 
+<dict_keyiterator at 0x107170e08>
+['a', 'b', 'c']
+```
+A generator is a concise way to construct a new iterable object. Whereas normal functions execute and return a single result at a time, generators return a sequence of multiple results lazily, pausing after each one until the next one is requested. To create a generator, use the `yield` keyword instead of `return` in a function:
+```python
+In [66]:
+def squares(n=10):
+    print('Generating squares from 1 to {0}'.format(n ** 2))
+    for i in range(1, n + 1):
+        yield i ** 2
+Out[66]: 
+<dict_keyiterator at 0x107170e08>
+['a', 'b', 'c']
+```
+When you actually call the generator, no code is immediately executed:
+```python
+In [67]:
+gen = squares()
+gen
+Out[67]: 
+<generator object squares at 0x105dd8f48>
+```
+It is not until you request elements from the generator that it begins executing its code:
+```python
+In [68]:
+for x in gen:
+    print(x, end = ' ')
+Out[68]: 
+Generating squares from 1 to 100
+1 4 9 16 25 36 49 64 81 100
+```
+#### Generator expresssions
+Another even more concise way to make a generator is by using a generator expression. This is a generator analogue to list, dict, and set comprehensions; to create one, enclose what would otherwise be a list comprehension within parentheses instead of brackets:
+```python
+In [69]:
+gen = (x ** 2 for x in range(100))
+gen
+Out[69]: 
+<generator object <genexpr> at 0x105dd8e58>
+```
+This is completely equivalent to the following more verbose（冗长）generator. Generator expressions can be used instead of list comprehensions as function arguments in many cases:
+```python
+In [70]:
+sum(x ** 2 for x in range(100))
+Out[70]: 
+328350
+In [71]:
+dict((i, i **2) for i in range(5))
+Out[71]: 
+{0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+```
+#### intertools module
+The standard library `itertools` module has a collection of generators for many common data algorithms. For example, `groupby` takes any sequence and a function, grouping consecutive elements in the sequence by return value of the function. Here’s an example:
+```python
+In [72]:
+import itertools
+first_letter = lambda x: x[0]
+names = ['Alan', 'Adam', 'Wes', 'Will', 'Albert', 'Steven']
+for letter, names in itertools.groupby(names, first_letter):
+    print(letter, list(names)) # names is a generator
+Out[72]: 
+{0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+```
+*Some useful itertools functions*  
+
+Function | Description
+------------ | -------------
+`combinations(iterable, k)` | Generates a sequence of all possible k-tuples of elements in the iterable, ignoring order and without replacement (see also the companion function `combinations_with_replacement`)
+`permutations(iterable, k)` | Generates a sequence of all possible k-tuples of elements in the iterable, respecting order
+`groupby(iterable[, keyfunc])` | Generates `(key, sub-iterator)` for each unique key
+`product(\*iterables, repeat=1)` | Generates the Cartesian product of the input iterables as tuples, similar to a nested `for` loop
+
+### Errors and Exception Handling
+Handling Python errors or exceptions gracefully（优雅地） is an important part of building robust programs. In data analysis applications, many functions only work on certain kinds of input. As an example, Python’s `float` function is capable of casting a string to a floating-point number, but fails with ValueError on improper inputs:
+```python
+In [73]:
+float('something')
+Out[73]: 
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-10-2649e4ade0e6> in <module>
+----> 1 float('something')
+
+ValueError: could not convert string to float: 'something'
+```
+Suppose we wanted a version of `float` that fails gracefully, returning the input argument. We can do this by writing a function that encloses the call to `float` in a `try/except` block:
+```python
+def attempt_float(x):
+    try:
+        return float(x)
+    except:
+        return x
+```
+You might want to only suppress ValueError, since a TypeError (the input was not a string or numeric value) might indicate a legitimate（合法） bug in your program. To do that, write the exception type after except:
+```python
+def attempt_float(x):
+    try:
+        return float(x)
+    except ValueError:
+        return x
+In [74]:
+attempt_float((1, 2))
+Out[74]: 
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+<ipython-input-12-8b0026e9e6b7> in <module>
+----> 1 attempt_float((1, 2))
+
+<ipython-input-11-6209ddecd2b5> in attempt_float(x)
+      1 def attempt_float(x):
+      2     try:
+----> 3         return float(x)
+      4     except ValueError:
+      5         return x
+
+TypeError: float() argument must be a string or a number, not 'tuple'
+```
+You can catch multiple exception types by writing a tuple of exception types instead (the parentheses（括号） are required):
+```python
+def attempt_float(x):
+    try:
+        return float(x)
+    except(TypeError, ValueError):
+        return x
+```
+In some cases, you may not want to suppress an exception, but you want some code to be executed regardless of whether the code in the `try` block succeeds or not. To do this, use `finally`:
+```python
+f = open(path, 'w')
+try:
+    write_to_file(f)
+finally:
+    f.close()
+```
+**AssertionError:**
+Having additional context by itself is a big advantage over the standard Python interpreter (which does not provide any additional context). You can control the amount of context shown using the %xmode magic command, from Plain (same as the standard Python interpreter) to Verbose (which inlines function argument values and more). As you will see later in the chapter, you can step into the stack (using the %debug or %pdb magics) after an error has occurred for interactive post-mortem debugging.
+## 3.3 Files and the Operating System
