@@ -1128,8 +1128,7 @@ with open(path) as f:
 ```
 This will automatically close the file f when exiting the `with` block.
 If we had typed f = open(path, 'w'), a new file at examples/segismundo.txt would have been created (be careful!), overwriting any one in its place. There is also the 'x' file mode, which creates a writable file but fails if the file path already exists.
-*Python file modes*
-
+*Python file modes*  
 
 Mode | Description
 ------------ | -------------
@@ -1140,6 +1139,7 @@ a | Append to existing file (create the file if it does not already exist)
 r+ | Read and write
 b | Add to mode for binary files (i.e., `'rb'` or `'wb'`)
 t | Text mode for files (automatically decoding bytes to Unicode). This is the default if not specified. Add t to other modes to use this (i.e., `'rt'` or `'xt'`)
+
 For readable files, some of the most commonly used methods are `read`, `seek`, and `tell`. `read` returns a certain number of characters from the file. What constitutes a “character” is determined by the file’s encoding (e.g., UTF-8) or simply raw bytes if the file is opened in binary mode:
 ```python
 In [76]:
@@ -1206,6 +1206,7 @@ Out[82]:
  'aunque ninguno lo entiende.\n']
 ```
 *Important Python file methods or attributes*  
+
 Mode | Description
 ------------ | -------------
 read(\[size]) | Return data from file as a string, with optional `size` argument indicating the number of bytes to read
