@@ -1360,3 +1360,74 @@ numeric_strings.astype(float)
 Out[98]: 
 array([ 1.25, -9.6 , 42.  ])
 ```
+### Arithmetic（算术） with NumPy Arrays
+Arrays are important because they enable you to express batch operations on data without writing any `for` loops. NumPy users call this vectorization（向量化）. Any arithmetic operations between equal-size arrays applies the operation element-wise:
+them to numeric form:
+```python
+In [99]:
+arr = np.array([[1, 2, 3], [4, 5, 6]])
+arr * arr
+Out[99]: 
+array([[ 1,  4,  9],
+       [16, 25, 36]])
+```
+Arithmetic operations with scalars propagate the scalar argument to each element in the array:
+```python
+In [100]:
+arr = np.array([[1, 2, 3], [4, 5, 6]])
+arr ** 0.5
+Out[100]: 
+array([[1.        , 1.41421356, 1.73205081],
+       [2.        , 2.23606798, 2.44948974]])
+```
+### Basic Indexing and Slicing
+NumPy array indexing is a rich topic, as there are many ways you may want to select a subset of your data or individual elements. One-dimensional arrays are simple; on the surface they act similarly to Python lists:
+An important first distinction
+from Python’s built-in lists is that array slices are views on the original array.
+This means that the data is not copied, and any modifications to the view will be
+reflected in the source array.
+To give an example of this, I first create a slice of arr:
+```python
+In [101]:
+arr = np.arange(10)
+arr[5:8] = 12
+arr_slice = arr[5:8]
+arr_slice[1] = 12345
+arr
+Out[101]: 
+array([    0,     1,     2,     3,     4,    12, 12345,    12,     8,
+           9])
+```
+The “bare” slice [:] will assign to all values in an array:
+```python
+In [102]:
+arr_slice[:] = 64
+arr
+Out[102]: 
+array([ 0,  1,  2,  3,  4, 64, 64, 64,  8,  9])
+```
+**If you are new to NumPy, you might be surprised by this, especially if you have used other array programming languages that copy data more eagerly. As NumPy has been
+designed to be able to work with very large arrays, you could imagine performance
+and memory problems if NumPy insisted on always copying data.**  
+If you want a copy of a slice of an ndarray instead of a view, youwill need to explicitly copy the array—for example,``arr[5:8].copy()``.  
+With higher dimensional arrays, you have many more options. In a two-dimensional
+array, the elements at each index are no longer scalars but rather one-dimensional
+arrays:
+```python
+In [103]:
+arr2d = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+arr2d[2]
+Out[103]: 
+array([7, 8, 9])
+```
+Thus, individual elements can be accessed recursively（递归地）. But that is a bit too much work, so you can pass a comma-separated list of indices to select individual elements.So these are equivalent:
+```python
+In [104]:
+arr2d[0][2]
+arr2d[0, 2]
+Out[104]: 
+3
+```
+#### Indexing with slices
+![](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/images/Two-dimensional array slicing.png)
+ 
