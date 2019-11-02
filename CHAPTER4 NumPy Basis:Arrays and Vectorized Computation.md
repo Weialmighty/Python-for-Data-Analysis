@@ -350,4 +350,4 @@ array([[[ 0,  1,  2,  3],
        [[ 4,  5,  6,  7],
         [12, 13, 14, 15]]])
 ```
-![three-dimension%20array](https://raw.githubusercontent.com/Weialmighty/Python-for-Data-Analysis/master/images/three-dimension%20array.png)
+![](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/images/three-dimension%20array.jpg)
