@@ -1,6 +1,6 @@
 # [**CHAPTER1 Preliminaries**](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/CHAPTER1%20Preliminaries.md)
 # [**CHAPTER2 Pyhton Language Basics**](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/CHAPTER2%20Pyhton%20Language%20Basics.md)
-# [**CHARPTER3 Bulit-in Data Structures, Functions, and Files**](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/CHARPTER3%20Bulit-in%20Data%20Structures%2C%20Functions%2C%20and%20Files.md)
+# [**CHAPTER3 Bulit-in Data Structures, Functions, and Files**](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/CHAPTER3%20Bulit-in%20Data%20Structures%2C%20Functions%2C%20and%20Files.md)
 # NumPy Basis:Arrays and Vectorized Computation
 NumPy, short for Numerical Python, is one of the most important foundational packages for numerical computing in Python. Most computational packages providing scientific functionality use NumPy’s array objects as the *lingua franca（通用语）* for data exchange.
 While NumPy provides a computational foundation for general numerical data processing, many readers will want to use pandas as the basis for most kinds of statistics or analytics, especially on tabular data（表格数据）. pandas also provides some more domainspecific functionality like time series manipulation, which is not present in NumPy.
