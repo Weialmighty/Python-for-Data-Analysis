@@ -178,4 +178,4 @@ Out[104]:
 3
 ```
 #### Indexing with slices
-![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+![Image of Yaktocat](https://raw.githubusercontent.com/Weialmighty/Python-for-Data-Analysis/master/images/Two-dimensional%20array%20slicing.png)
