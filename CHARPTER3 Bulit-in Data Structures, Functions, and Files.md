@@ -1,4 +1,4 @@
-# CHARPTER3 Built-in Data Structures, Functions, and Files
+# CHARTER3 Built-in Data Structures, Functions, and Files
 ## Data Structure and Sequences
 ### Tuple
 A tuple is a fixed-length, immutable sequence of Python objects. The easiest way to create one is with a comma-separated sequence of values.
