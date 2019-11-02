@@ -179,3 +179,175 @@ Out[104]:
 ```
 #### Indexing with slices
 ![Two-dimensional array slicing](https://raw.githubusercontent.com/Weialmighty/Python-for-Data-Analysis/master/images/Two-dimensional%20array%20slicing.png)
+#### Boolean Indexing
+Let’s consider an example where we have some data in an array and an array of names with duplicates.
+```python
+In [105]:
+names = np.array(['Bob', 'Joe', 'Will', 'Bob', 'Will', 'Joe', 'Joe'])
+data = np.random.randn(7, 4)
+names
+data
+Out[105]: 
+array(['Bob', 'Joe', 'Will', 'Bob', 'Will', 'Joe', 'Joe'], dtype='<U4')
+array([[ 0.05259706,  0.63026513,  0.43002745,  0.21723217],
+       [ 0.09837067,  1.03194437, -1.61616254,  0.51231335],
+       [-0.42059041, -0.12141926,  0.92325247,  0.53682676],
+       [-0.4736811 , -1.7549849 , -0.69585262,  0.13715611],
+       [ 1.25152543,  0.19938113,  0.24788077,  0.5999967 ],
+       [ 0.24395716, -0.12508072,  0.33555566, -0.60460334],
+       [-1.20109676,  0.05939765, -0.06060381, -0.2713454 ]])
+In [106]:
+names == 'Bob'
+data[names == 'Bob']
+Out[106]: 
+array([ True, False, False,  True, False, False, False])
+array([[ 0.05259706,  0.63026513,  0.43002745,  0.21723217],
+       [-0.4736811 , -1.7549849 , -0.69585262,  0.13715611]])
+In [107]:
+data[names != 'Joe'] = 7
+data
+Out[107]: 
+array([[ 7.        ,  7.        ,  7.        ,  7.        ],
+       [ 0.09837067,  1.03194437, -1.61616254,  0.51231335],
+       [ 7.        ,  7.        ,  7.        ,  7.        ],
+       [ 7.        ,  7.        ,  7.        ,  7.        ],
+       [ 7.        ,  7.        ,  7.        ,  7.        ],
+       [ 0.24395716, -0.12508072,  0.33555566, -0.60460334],
+       [-1.20109676,  0.05939765, -0.06060381, -0.2713454 ]])
+```
+#### Fancy Indexing
+```python
+In [108]:
+arr = np.empty((8, 4))
+for i in range(8):
+    arr[i] = i
+Out[108]: 
+array([[0., 0., 0., 0.],
+       [1., 1., 1., 1.],
+       [2., 2., 2., 2.],
+       [3., 3., 3., 3.],
+       [4., 4., 4., 4.],
+       [5., 5., 5., 5.],
+       [6., 6., 6., 6.],
+       [7., 7., 7., 7.]])
+```
+To select out a subset of the rows in a particular order, you can simply pass a list or ndarray of integers specifying the desired order:
+```python
+In [109]:
+arr[[4, 3, 0, 6]]
+Out[109]: 
+array([[4., 4., 4., 4.],
+       [3., 3., 3., 3.],
+       [0., 0., 0., 0.],
+       [6., 6., 6., 6.]])
+```
+Using negative indices selects rows from the end:
+```python
+In [110]:
+arr[[-3, -5, -7]]
+Out[110]: 
+array([[5., 5., 5., 5.],
+       [3., 3., 3., 3.],
+       [1., 1., 1., 1.]])
+```
+Passing multiple index arrays does something slightly different; it selects a one-dimensional array of elements corresponding to each tuple of indices:
+```python
+In [111]:
+arr = np.arange(32).reshape((8, 4))
+arr
+Out[111]: 
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11],
+       [12, 13, 14, 15],
+       [16, 17, 18, 19],
+       [20, 21, 22, 23],
+       [24, 25, 26, 27],
+       [28, 29, 30, 31]])
+In [112]:
+arr[[1, 5, 7, 2], [0, 3, 1, 2]]
+Out[112]: 
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11],
+       [12, 13, 14, 15],
+       [16, 17, 18, 19],
+       [20, 21, 22, 23],
+       [24, 25, 26, 27],
+       [28, 29, 30, 31]])
+```
+Here the elements `(1, 0)`, `(5, 3)`, `(7, 1)`, and `(2, 2)` were selected. Regardless of how many dimensions the array has (here, only 2), the result of fancy indexing is always one-dimensional.
+**The behavior of fancy indexing in this case is a bit different from what some users might have expected (myself included), which is the rectangular region formed by selecting a subset of the matrix’s rows and columns. Here is one way to get that:**
+```python
+In [113]:
+#选择第2、6、8、3行，并按[0,3,1,2]的顺序输出
+arr[[1, 5, 7, 2]][:, [0, 3, 1, 2]]
+Out[113]: 
+array([[ 4,  7,  5,  6],
+       [20, 23, 21, 22],
+       [28, 31, 29, 30],
+       [ 8, 11,  9, 10]])
+```
+**Keep in mind that fancy indexing, unlike slicing, always copies the data into a new array.**
+### Transposing(转置) Arrays and Swapping Axes
+Transposing is a special form of reshaping that similarly returns a view on the underlying data without copying anything. Arrays have the `transpose` method and also the special T attribute:
+```python
+In [114]:
+arr = np.arange(15).reshape((3, 5))
+arr.T
+Out[114]: 
+array([[ 0,  5, 10],
+       [ 1,  6, 11],
+       [ 2,  7, 12],
+       [ 3,  8, 13],
+       [ 4,  9, 14]])
+```
+When doing matrix computations, you may do this very often—for example, when computing the inner matrix product using `np.dot`:
+```python
+In [115]:
+arr = np.random.randn(6, 3)
+arr
+np.dot(arr.T, arr)
+Out[115]: 
+array([[ 2.10776823,  2.10363774,  0.32784765],
+       [ 0.10630046,  1.15645314,  0.67524184],
+       [ 0.58085279,  1.99302591,  0.15709767],
+       [-0.14919957, -1.02491907,  0.23112372],
+       [-0.67886396, -1.78571283, -0.60596028],
+       [-0.1954028 , -0.75675842, -1.20430483]])
+array([[ 5.31267569,  7.22761324,  1.46626157],
+       [ 7.22761324, 14.54674063,  3.54021372],
+       [ 1.46626157,  3.54021372,  2.45907145]])
+```
+For higher dimensional arrays, `transpose` will accept a tuple of axis numbers to permute（置换） the axes (for extra mind bending):
+```python
+In [116]:
+#多维数组就是数组的数组
+arr = np.arange(16).reshape((2, 2, 4))
+arr
+arr.transpose((1, 0, 2))
+Out[116]: 
+array([[[ 0,  1,  2,  3],
+        [ 4,  5,  6,  7]],
+
+       [[ 8,  9, 10, 11],
+        [12, 13, 14, 15]]])
+In [117]:
+#多维数组就是数组的数组
+arr = np.arange(16).reshape((2, 2, 4))
+arr
+arr.transpose((1, 0, 2))
+Out[117]: 
+array([[[ 0,  1,  2,  3],
+        [ 4,  5,  6,  7]],
+
+       [[ 8,  9, 10, 11],
+        [12, 13, 14, 15]]])
+
+array([[[ 0,  1,  2,  3],
+        [ 8,  9, 10, 11]],
+
+       [[ 4,  5,  6,  7],
+        [12, 13, 14, 15]]])
+```
+![three-dimension%20array](https://raw.githubusercontent.com/Weialmighty/Python-for-Data-Analysis/master/images/three-dimension%20array.png)
