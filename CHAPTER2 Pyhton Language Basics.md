@@ -29,7 +29,7 @@ Out[2]:
  5: -0.5751811367566934,
  6: -1.0961269397945121}
 ```
-### Introspection（自省）
+### 2.1.1 Introspection（自省）
 Using a question mark `?` before or after a variable will display some general information about the object:
 ```python
 In[3]: 
@@ -123,13 +123,13 @@ np.loads
 np.loadtxt
 np.pkgload
 ```
-### The %run Command
+### 2.1.2 The %run Command
 Suppose you had the following simple script stored in ipython_script_test.py:  
 You can execute this by passing the filename to %run
 In the Jupyter notebook, you may also use the related %load magic function, which imports a script into a code cell:
 **Interrupting running code**  
 Pressing Ctrl-C while any code is running, whether a script through %run or a longrunning command, will cause a KeyboardInterrupt to be raised. This will cause nearly all Python programs to stop immediately except in certain unusual cases.
-### Executing Code from Clipboard
+### 2.1.3 Executing Code from Clipboard
 If you are using the Jupyter notebook, you can copy and paste code into any code cell and execute it. It is also possible to run code from the clipboard in the IPython shell. Suppose you had the following code in some other application:
 ```
 x = 5
@@ -141,7 +141,7 @@ if x > 5:
 The most foolproof methods are the %paste and %cpaste magic functions. %paste takes whatever text is in the clipboard and executes it as a single block in the shell:
 %cpaste is similar, except that it gives you a special prompt for pasting code into:  
 With the %cpaste block, you have the freedom to paste as much code as you like before executing it. You might decide to use %cpaste in order to look at the pasted code before executing it. If you accidentally paste the wrong code, you can break out of the %cpaste prompt by pressing Ctrl-C.
-### About Magic Commands
+### 2.1.4 About Magic Commands
 *Some frequently used Ipython magic commands*  
 
 Command | Description
@@ -160,7 +160,7 @@ Command | Description
 %timeit statement | Run a statement multiple times to compute an ensemble average execution time; useful for timing code with very short execution time
 %who, %who_ls, %whos | Display variables defined in interactive namespace, with varying levels of information/verbosity
 %xdel variable | Delete a variable and attempt to clear any references to the object in the IPython internals
-### Matplotlib Integration
+### 2.1.5 Matplotlib Integration
 In the IPython shell, running %matplotlib sets up the integration so you can create multiple plot windows without interfering with the console session, In Jupyter, the command is a little different:
 ```python
 In[8]: 
@@ -172,7 +172,7 @@ Out[8]:
 [<matplotlib.lines.Line2D at 0x11a63b6a0>]
 ```
 ![](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/images/image8.png)
-## 2.3 Python Language Basis
+## 2.2 Python Language Basis
 *Binary operators*  
 
 Operation | Description
@@ -182,7 +182,7 @@ a ** b | Raise a to the b power
 a & b | True if both a and b are True; for integers, take the bitwise（按位、逐位） AND
 a \| b | True if either a or b is True; for integers, take the bitwise OR
 a ^ b| For booleans, True if a or b is True, but not both; for integers, take the bitwise EXCLUSIVE-OR
-### Control Flow
+### 2.2.1 Control Flow
 #### if, elif, and else
 #### for loops
 #### while loops
