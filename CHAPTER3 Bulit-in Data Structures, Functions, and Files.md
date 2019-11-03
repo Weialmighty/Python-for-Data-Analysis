@@ -1,6 +1,6 @@
 # CHAPTER3 Built-in Data Structures, Functions, and Files
-## Data Structure and Sequences
-### Tuple
+## 3.1 Data Structure and Sequences
+### 3.1.1 Tuple
 A tuple is a fixed-length, immutable sequence of Python objects. The easiest way to create one is with a comma-separated sequence of values.
 You can convert any sequence or iterator to a tuple by invoking tuple:
 ```python
@@ -112,7 +112,7 @@ a.count(2)
 Out[21]: 
 4
 ```
-### List
+### 3.1.2 List
 In contrast with tuples, lists are variable-length and their contents can be modified in-place. You can define them using square brackets [] or using the list type function.
 The `list` function is frequently used in data processing as a way to materialize（实现） an iterator（迭代） or generator expression:
 ```python
@@ -194,7 +194,7 @@ seq[::-1]
 Out[29]: 
 [1, 0, 6, 5, 3, 6, 3, 2, 7]
 ``` 
-### Build-in Sequence Functions
+### 3.1.3 Build-in Sequence Functions
 #### enumerate
 It’s common when iterating over a sequence to want to keep track of the index of the
 current item. A do-it-yourself approach would look like:
@@ -285,7 +285,7 @@ Out[37]:
 [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 ``` 
 Keep in mind that `reversed` is a generator (to be discussed in some more detail later), so it does not create the reversed sequence until materialized (e.g., with `list` or a `for` loop).
-### dict
+### 3.1.4 dict
 You can access, insert, or set elements using the same syntax as for accessing elements of a list or tuple. You can delete values either using the `del` keyword or the `pop` method (which simultaneously returns the value and deletes the key):
 ```python
 In [38]: 
@@ -392,7 +392,7 @@ d
 Out[48]: 
 {(1, 2, 3): 5}
 ``` 
-### set
+### 3.1.5 set
 A set is an unordered collection of unique elements. You can think of them like dicts, but keys only, no values. A set can be created in two ways: via the set function or via a set literal with curly braces花括号:
 ```python
 In [49]: 
@@ -448,7 +448,7 @@ In [53]:
 Out[53]: 
 True
 ``` 
-### List, Set, and Dict Comprehensions
+### 3.1.6 List, Set, and Dict Comprehensions
 *List comprehensions* are one of the most-loved Python language features. They allow you to concisely form a new list by filtering the elements of a collection, transforming the elements passing the filter in one concise expression. They take the basic form:
 ```[expr for val in collection if condition]```
 This is equivalent to the following for loop:
@@ -493,7 +493,7 @@ loc_mapping
 Out[57]: 
 {'a': 0, 'as': 1, 'bat': 2, 'car': 3, 'dove': 4, 'python': 5}
 ``` 
-#### Nested list comprehensions
+#### 3.1.7 Nested list comprehensions
 Suppose we have a list of lists containing some English and Spanish names:
 Now, suppose we wanted to get a single list containing all names with two or more e’s in them. We could certainly do this with a simple `for` loop:
 ```python
@@ -530,7 +530,7 @@ This produces a list of lists, rather than a flattened（扁平化）list of all
 ## 3.2 Functions
 **There is no issue with having multiple `return` statements. If Python reaches the end of a function without encountering a `return` statement, `None` is returned automatically.**
 Each function can have positional arguments and keyword arguments. Keyword arguments are most commonly used to specify default values or optional arguments.
-### Namespaces, Scope, and Local Functions
+### 3.2.1 Namespaces, Scope, and Local Functions
 Functions can access variables in two different scopes: global and local. An alternative and more descriptive name describing a variable scope in Python is a namespace. Any variables that are assigned within a function by default are assigned to the local namespace. The local namespace is created when the function is called and immediately populated by（由...填充）the function’s arguments. After the function is finished, the local namespace is destroyed (with some exceptions that are outside the purview 范围 of this chapter). Consider the following function:
 ```python
 def func():
@@ -554,7 +554,7 @@ def bind_a_variable():
 bind_a_variable()
 ``` 
 I generally discourage use of the `global` keyword. Typically global variables are used to store some kind of state in a system. If you find yourself using a lot of them, it may indicate a need for objectoriented programming (using classes).
-### Returning Multiple Values
+### 3.2.2 Returning Multiple Values
 When I first programmed in Python after having programmed in Java and C++, one of my favorite features was the ability to return multiple values from a function with simple syntax. Here’s an example:
 ```python
 def f():
@@ -577,7 +577,7 @@ def f():
     return {'a' : a, 'b' : b, 'c' : c}
 ``` 
 This alternative technique can be useful depending on what you are trying to do.
-### Functions Are Objects
+### 3.2.3 Functions Are Objects
 Suppose we were doing some data cleaning and needed to apply a bunch of transformations to the following list of strings:
 ```python
 states = [' Alabama ', 'Georgia!', 'Georgia', 'georgia', 'FlOrIda', 'south carolina##', 'West virginia?']
@@ -632,7 +632,7 @@ FlOrIda
 south carolina
 West virginia
 ``` 
-### Anonymous(Lambada) Functions 无名函数
+### 3.2.4 Anonymous(Lambada) Functions 无名函数
 Python has support for so-called *anonymous or lambda functions*, which are a way of writing functions consisting of a single statement, the result of which is the return value. They are defined with the `lambda` keyword, which has no meaning other than “we are declaring an anonymous function”:
 ```python
 def short_function(x):
@@ -655,7 +655,7 @@ strings.sort(key=lambda x: len(set(list(x)))) # set() 函数创建一个无序�
 Out[63]: 
 ['aaaa', 'foo', 'abab', 'bar', 'card']
 ```
-### Currying: Partial Argument Application
+### 3.2.5 Currying: Partial Argument Application
 *Currying* is computer science jargon (named after the mathematician Haskell Curry) that means deriving new functions from existing ones by partial argument application. For example, suppose we had a trivial function(不重要的函数) that adds two numbers together:
 ```python
 def add_numbers(x, y):
@@ -670,7 +670,7 @@ The second argument to `add_numbers` is said to be curried. There’s nothing ve
 from functools import partial
 add_five = partial(add_numbers, 5)
 ```
-### Generators
+### 3.2.6 Generators
 Having a consistent way to iterate(重复) over sequences, like objects in a list or lines in a file, is an important Python feature. This is accomplished by means of the iterator protocol, a generic way to make objects iterable. For example, iterating over a dict yields the dict keys:
 ```python
 In [64]:
@@ -720,7 +720,7 @@ Out[68]:
 Generating squares from 1 to 100
 1 4 9 16 25 36 49 64 81 100
 ```
-#### Generator expresssions
+#### 3.2.7 Generator expresssions
 Another even more concise way to make a generator is by using a generator expression. This is a generator analogue to list, dict, and set comprehensions; to create one, enclose what would otherwise be a list comprehension within parentheses instead of brackets:
 ```python
 In [69]:
@@ -761,7 +761,7 @@ Function | Description
 `groupby(iterable[, keyfunc])` | Generates `(key, sub-iterator)` for each unique key
 `product(\*iterables, repeat=1)` | Generates the Cartesian product of the input iterable as tuples, similar to a nested `for` loop
 
-### Errors and Exception Handling
+### 3.2.8 Errors and Exception Handling
 Handling Python errors or exceptions gracefully（优雅地） is an important part of building robust programs. In data analysis applications, many functions only work on certain kinds of input. As an example, Python’s `float` function is capable of casting a string to a floating-point number, but fails with ValueError on improper inputs:
 ```python
 In [73]:
@@ -958,7 +958,7 @@ flush() | Flush the internal I/O buffer to disk
 seek(pos) | Move to indicated file position (integer)
 tell() | Return current file position as integer
 closed | `True` if the file is closed
-### Bytes and Unicode with Files
+### 3.3.1 Bytes and Unicode with Files
 The default behavior for Python files (whether readable or writable) is text mode, which means that you intend to work with Python strings (i.e., Unicode). This contrasts with binary mode, which you can obtain by appending b onto the file mode. Let’s look at the file (which contains non-ASCII characters with UTF-8 encoding) from the previous section:
 UTF-8 is a variable-length Unicode encoding, so when I requested some number of characters from the file, Python reads enough bytes (which could be as few as 10 or as many as 40 bytes) from the file to decode that many characters. If I open the file in `'rb'` mode instead, `read` requests exact numbers of bytes:
 ```python
