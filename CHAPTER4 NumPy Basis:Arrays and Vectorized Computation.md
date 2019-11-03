@@ -35,7 +35,7 @@ Out[90]:
 dtype('float64')
 ```
 This chapter will introduce you to the basics of using NumPy arrays, and should be sufficient for following along with the rest of the book. While it’s not necessary to have a deep understanding of NumPy for many data analytical applications, becoming proficient in array-oriented programming and thinking is a key step along the way to becoming a scientific Python guru（大师）.
-### Creating ndarrays
+### 4.1.1 Creating ndarrays
 The easiest way to create an array is to use the `array` function. This accepts any sequence-like object (including other arrays) and produces a new NumPy array containing the passed data. For example, a list is a good candidate for conversion:
 ```python
 In [91]:
@@ -109,7 +109,7 @@ numeric_strings.astype(float)
 Out[98]: 
 array([ 1.25, -9.6 , 42.  ])
 ```
-### Arithmetic（算术） with NumPy Arrays
+### 4.1.2 Arithmetic（算术） with NumPy Arrays
 Arrays are important because they enable you to express batch operations on data without writing any `for` loops. NumPy users call this vectorization（向量化）. Any arithmetic operations between equal-size arrays applies the operation element-wise:
 them to numeric form:
 ```python
@@ -129,7 +129,7 @@ Out[100]:
 array([[1.        , 1.41421356, 1.73205081],
        [2.        , 2.23606798, 2.44948974]])
 ```
-### Basic Indexing and Slicing
+### 4.1.3 Basic Indexing and Slicing
 NumPy array indexing is a rich topic, as there are many ways you may want to select a subset of your data or individual elements. One-dimensional arrays are simple; on the surface they act similarly to Python lists:
 An important first distinction
 from Python’s built-in lists is that array slices are views on the original array.
