@@ -351,3 +351,130 @@ array([[[ 0,  1,  2,  3],
         [12, 13, 14, 15]]])
 ```
 ![](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/images/three-dimension%20array.jpg)
+Simple transposing with .T is a special case of swapping axes. ndarray has the method `swapaxes`, which takes a pair of axis numbers and switches the indicated axes to rearrange the data:
+```python
+In [118]:
+arr.swapaxes(1, 2)
+Out[118]: 
+array([[[ 0,  1,  2,  3],
+        [ 4,  5,  6,  7]],
+
+       [[ 8,  9, 10, 11],
+        [12, 13, 14, 15]]])
+```
+`swapaxes` similarly returns a view on the data **without making a copy.**
+## 4.2 Universal Functions: Fast Element-Wise Array Functions
+Many ufuncs are simple element-wise（按元素） transformations, like `sqrt` or `exp`:
+```python
+In [119]:
+arr = np.arange(10)
+arr
+np.sqrt(arr)
+np.exp(arr)
+Out[119]: 
+array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+array([0.        , 1.        , 1.41421356, 1.73205081, 2.        ,
+       2.23606798, 2.44948974, 2.64575131, 2.82842712, 3.        ])
+       
+array([1.00000000e+00, 2.71828183e+00, 7.38905610e+00, 2.00855369e+01,
+       5.45981500e+01, 1.48413159e+02, 4.03428793e+02, 1.09663316e+03,
+       2.98095799e+03, 8.10308393e+03])
+```
+These are referred to as *unary* ufuncs. Others, such as `add` or `maximum`, take two arrays (thus, binary ufuncs) and return a single array as the result:
+```python
+In [120]:
+x = np.random.randn(8)
+y = np.random.randn(8)
+x
+y
+np.maximum(x, y)
+Out[120]: 
+array([ 0.05708168, -0.64941674,  0.98896889, -0.53771057,  0.94243047,
+       -1.00778455, -0.37653225, -0.97950608])
+       
+array([-1.44891236, -0.050785  ,  0.18511402, -1.30783113,  0.54861108,
+       -0.37563996, -0.75057934,  0.76797747])
+       
+array([ 0.05708168, -0.050785  ,  0.98896889, -0.53771057,  0.94243047,
+       -0.37563996, -0.37653225,  0.76797747])
+```
+While not common, a ufunc can return multiple arrays. `modf` is one example, a vectorized version of the built-in Python `divmod`; it returns the fractional and integral parts of a floating-point array:
+```python
+In [121]:
+arr = np.random.randn(7) * 5
+arr
+remainder, whole_part = np.modf(arr)
+remainder
+whole_part
+np.maximum(x, y)
+Out[121]: 
+array([ 6.70341005,  5.3828393 , -3.91961551, 11.00272227,  7.36444749,
+       -2.43786265,  4.04770636])
+       
+array([ 0.70341005,  0.3828393 , -0.91961551,  0.00272227,  0.36444749,
+       -0.43786265,  0.04770636])
+       
+array([ 6.,  5., -3., 11.,  7., -2.,  4.])
+```
+Ufuncs accept an optional `out` argument that allows them to operate in-place on arrays:
+```python
+In [122]:
+arr
+
+#不替代arr
+np.sqrt(arr)
+arr
+
+#替代arr
+np.sqrt(arr, arr)
+arr
+Out[122]: 
+array([ 6.70341005,  5.3828393 , -3.91961551, 11.00272227,  7.36444749,
+       -2.43786265,  4.04770636])
+       
+array([2.58909445, 2.32009468,        nan, 3.31703516, 2.71375155,
+              nan, 2.01189124])
+array([ 6.70341005,  5.3828393 , -3.91961551, 11.00272227,  7.36444749,
+       -2.43786265,  4.04770636])              
+
+array([2.58909445, 2.32009468,        nan, 3.31703516, 2.71375155,
+              nan, 2.01189124])
+              
+array([2.58909445, 2.32009468,        nan, 3.31703516, 2.71375155,
+              nan, 2.01189124])              
+```
+*Table 4-3. Unary（一元的） ufuncs*  
+
+Function | Description
+------------ | -------------
+`abs, fabs` | Compute the absolute value element-wise for integer, floating-point, or complex values
+`sqrt` | Compute the square root of each element (equivalent to `arr ** 0.5`)
+`square` | Compute the square of each element (equivalent to `arr ** 2`)
+`exp` | Compute the exponent ex of each element
+`log, log10, log2, log1p` | Natural logarithm (base e), log base 10, log base 2, and log(1 + x), respectively
+`sign` | Compute the sign of each element: 1 (positive), 0 (zero), or –1 (negative)
+`ceil` | Compute the ceiling of each element (i.e., the smallest integer greater than or equal to that number)
+`floor` | Compute the floor of each element (i.e., the largest integer less than or equal to each element)
+`rint` | Round elements to the nearest integer, preserving the `dtype`
+`modf` | Return fractional and integral parts of array as a separate array
+`isnan` | Return boolean array indicating whether each value is `NaN` (Not a Number)
+`isfinite, isinf` | Return boolean array indicating whether each element is finite (non-inf, non-NaN) or infinite, respectively
+`cos, cosh, sin, sinh, tan, tanh, arccos, arccosh, arcsin, arcsinh, arctan, arctanh` | Regular and hyperbolic（双曲） trigonometric functions and Inverse trigonometric functions
+`logical_not` | Compute truth value of not x element-wise (equivalent to ~arr)  
+
+*Table 4-4. Binary（一元的） universal functions*  
+
+Function | Description
+------------ | -------------
+`add` | Add corresponding elements in arrays
+`subtract` | Subtract elements in second array from first array
+`multiply` | Multiply array elements
+`divide, floor_divide` | Divide or floor divide (truncating the remainder)
+`power` | Raise elements in first array to powers indicated in second array
+`maximum, fmax` | Element-wise maximum; `fmax` ignores `NaN`
+`minimum, fmin` | Element-wise minimum; `fmin` ignores `NaN`
+`mod` | Element-wise modulus (remainder of division)
+`copysign` | Copy sign of values in second argument to values in first argument
+`greater, greater_equal, less, less_equal, equal, not_equal` | Perform element-wise comparison, yielding boolean array (equivalent to infix operators >, >=, <, <=, ==, !=)
+`logical_and, logical_or, logical_xor` | Compute element-wise truth value of logical operation (equivalent to infix operators & |, ^)
