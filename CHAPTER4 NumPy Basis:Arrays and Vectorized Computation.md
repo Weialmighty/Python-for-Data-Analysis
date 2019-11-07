@@ -477,4 +477,147 @@ Function | Description
 `mod` | Element-wise modulus (remainder of division)
 `copysign` | Copy sign of values in second argument to values in first argument
 `greater, greater_equal, less, less_equal, equal, not_equal` | Perform element-wise comparison, yielding boolean array (equivalent to infix operators >, >=, <, <=, ==, !=)
-`logical_and, logical_or, logical_xor` | Compute element-wise truth value of logical operation (equivalent to infix operators & |, ^)
+`logical_and, logical_or, logical_xor` | Compute element-wise truth value of logical operation (equivalent to infix operators & |, ^)  
+
+## Array-Oriented Programmming with Arrays
+As a simple example, suppose we wished to evaluate the function `sqrt(x^2 + y^2)` across a regular grid of values. The `np.meshgrid` function takes two 1D arrays and produces two 2D matrices corresponding to all pairs of `(x, y)` in the two arrays:
+```python
+In [123]:
+points = np.arange(-5, 5, 0.01) # 1000 equally spaced points
+xs, ys = np.meshgrid(points, points)
+xs
+ys
+Out[123]: 
+array([[-5.  , -4.99, -4.98, ...,  4.97,  4.98,  4.99],
+       [-5.  , -4.99, -4.98, ...,  4.97,  4.98,  4.99],
+       [-5.  , -4.99, -4.98, ...,  4.97,  4.98,  4.99],
+       ...,
+       [-5.  , -4.99, -4.98, ...,  4.97,  4.98,  4.99],
+       [-5.  , -4.99, -4.98, ...,  4.97,  4.98,  4.99],
+       [-5.  , -4.99, -4.98, ...,  4.97,  4.98,  4.99]])
+array([[-5.  , -5.  , -5.  , ..., -5.  , -5.  , -5.  ],
+       [-4.99, -4.99, -4.99, ..., -4.99, -4.99, -4.99],
+       [-4.98, -4.98, -4.98, ..., -4.98, -4.98, -4.98],
+       ...,
+       [ 4.97,  4.97,  4.97, ...,  4.97,  4.97,  4.97],
+       [ 4.98,  4.98,  4.98, ...,  4.98,  4.98,  4.98],
+       [ 4.99,  4.99,  4.99, ...,  4.99,  4.99,  4.99]])        
+```
+Now, evaluating the function is a matter of writing the same expression you would write with two points:
+```python
+In [124]:
+z = np.sqrt(xs ** 2 + ys ** 2)
+z
+Out[124]: 
+array([[7.07106781, 7.06400028, 7.05693985, ..., 7.04988652, 7.05693985,
+        7.06400028],
+       [7.06400028, 7.05692568, 7.04985815, ..., 7.04279774, 7.04985815,
+        7.05692568],
+       [7.05693985, 7.04985815, 7.04278354, ..., 7.03571603, 7.04278354,
+        7.04985815],
+       ...,
+       [7.04988652, 7.04279774, 7.03571603, ..., 7.0286414 , 7.03571603,
+        7.04279774],
+       [7.05693985, 7.04985815, 7.04278354, ..., 7.03571603, 7.04278354,
+        7.04985815],
+       [7.06400028, 7.05692568, 7.04985815, ..., 7.04279774, 7.04985815,
+        7.05692568]])
+```
+Use matplotlib to create visualizations of this twodimensional array:
+```python
+In [125]:
+import matplotlib.pyplot as plt
+plt.imshow(z, cmap=plt.cm.gray); plt.colorbar()
+plt.title("Image plot of $\sqrt{x^2 + y^2}$ for a grid of values")
+Out[125]: 
+array([[7.07106781, 7.06400028, 7.05693985, ..., 7.04988652, 7.05693985,
+        7.06400028],
+       [7.06400028, 7.05692568, 7.04985815, ..., 7.04279774, 7.04985815,
+        7.05692568],
+       [7.05693985, 7.04985815, 7.04278354, ..., 7.03571603, 7.04278354,
+        7.04985815],
+       ...,
+       [7.04988652, 7.04279774, 7.03571603, ..., 7.0286414 , 7.03571603,
+        7.04279774],
+       [7.05693985, 7.04985815, 7.04278354, ..., 7.03571603, 7.04278354,
+        7.04985815],
+       [7.06400028, 7.05692568, 7.04985815, ..., 7.04279774, 7.04985815,
+        7.05692568]])
+```
+![](https://github.com/Weialmighty/Python-for-Data-Analysis/blob/master/images/Figure%204-3.png)
+### Expressing Conditional logic as Array Operations
+The `numpy.where` function is a vectorized version of the ternary expression x `if condition else y`. Suppose we had a boolean array and two arrays of values, Suppose we wanted to take a value from xarr whenever the corresponding value in cond is True, and otherwise take the value from yarr. A list comprehension doing this might look like::
+```python
+In [126]:
+xarr = np.array([1.1, 1.2, 1.3, 1.4, 1.5])
+yarr = np.array([2.1, 2.2, 2.3, 2.4, 2.5])
+cond = np.array([True, False, True, True, False])
+result = np.where(cond, xarr, yarr)
+result
+Out[126]: 
+array([1.1, 2.2, 1.3, 1.4, 2.5])
+```
+The second and third arguments to np.where don’t need to be arrays; one or both of them can be scalars. A typical use of where in data analysis is to produce a new array of values based on another array. Suppose you had a matrix of randomly generated data and you wanted to replace all positive values with 2 and all negative values with –2. This is very easy to do with np.where:
+```python
+In [127]:
+arr = np.random.randn(4, 4)
+arr
+arr > 0
+Out[127]: 
+array([[-1.44700794,  0.83268887, -0.67602992, -0.16833106],
+       [ 1.64530508, -0.75205006, -0.10626227,  0.06787526],
+       [ 0.90069935, -1.07647617, -0.19616563, -1.05209306],
+       [ 0.28371622, -1.24829144,  0.55126666, -0.28608807]])
+array([[False,  True, False, False],
+       [ True, False, False,  True],
+       [ True, False, False, False],
+       [ True, False,  True, False]])
+In [128]:
+np.where(arr > 0, 2, -2)
+Out[128]: 
+array([[-2,  2, -2, -2],
+       [ 2, -2, -2,  2],
+       [ 2, -2, -2, -2],
+       [ 2, -2,  2, -2]])
+```
+### Mathematical and Statistical Methods
+A set of mathematical functions that compute statistics about an entire array or about the data along an axis are accessible as methods of the array class. You can use aggregations (often called reductions) like `sum`, `mean`, and `std` (standard deviation) either by calling the array instance method or using the top-level NumPy function.
+Here I generate some normally distributed random data and compute some aggregate statistics:
+```python
+In [129]:
+arr = np.random.randn(5, 4)
+arr
+Out[129]: 
+array([[-1.44700794,  0.83268887, -0.67602992, -0.16833106],
+       [ 1.64530508, -0.75205006, -0.10626227,  0.06787526],
+       [ 0.90069935, -1.07647617, -0.19616563, -1.05209306],
+       [ 0.28371622, -1.24829144,  0.55126666, -0.28608807]])
+array([[False,  True, False, False],
+       [ True, False, False,  True],
+       [ True, False, False, False],
+       [ True, False,  True, False]])
+In [130]:
+np.where(arr > 0, 2, -2)
+Out[130]: 
+array([[-2,  2, -2, -2],
+       [ 2, -2, -2,  2],
+       [ 2, -2, -2, -2],
+       [ 2, -2,  2, -2]])
+In [131]:
+arr.mean()
+np.mean(arr)
+Out[131]: 
+-0.10516923223446992
+```
+**Functions like `mean` and `sum` take an optional axis argument that computes the statistic over the given axis, resulting in an array with one fewer dimension:**
+```python
+In [132]:
+arr.mean(axis=1)#压缩列，对各行求均值，返回m*1矩阵
+Out[132]: 
+array([-0.52548653, -0.72405978,  0.23357447,  0.44441339,  0.0457123 ])
+In [133]:
+arr.sum(axis=0)#压缩行，对各列求和，返回1*n矩阵
+Out[133]: 
+array([-1.44625899,  0.26889354,  2.14307966, -3.06909885])
+```
+Here, `arr.mean(1)` means “compute mean across the columns” where `arr.sum(0)` means “compute sum down the rows.”
