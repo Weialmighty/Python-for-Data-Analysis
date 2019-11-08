@@ -621,3 +621,38 @@ Out[133]:
 array([-1.44625899,  0.26889354,  2.14307966, -3.06909885])
 ```
 Here, `arr.mean(1)` means “compute mean across the columns” where `arr.sum(0)` means “compute sum down the rows.”
+Other methods like `cumsum` and `cumprod` do not aggregate（聚合）, instead producing an array of the intermediate results:
+```python
+In [134]:
+arr = np.array([0, 1, 2, 3, 4, 5, 6, 7])
+arr.cumsum()
+Out[134]: 
+array([ 0,  1,  3,  6, 10, 15, 21, 28])
+```
+In multidimensional arrays, accumulation functions like `cumsum` return an array of the same size, but with the partial aggregates computed along the indicated axis according to each lower dimensional slice:
+```python
+In [135]:
+arr = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
+arr
+arr.cumsum(axis=0)
+arr.cumprod(axis=1)#累计乘法
+Out[135]: 
+array([[0, 1, 2],
+       [3, 4, 5],
+       [6, 7, 8]])
+array([[ 0,  1,  2],
+       [ 3,  5,  7],
+       [ 9, 12, 15]])
+array([[  0,   0,   0],
+       [  3,  12,  60],
+       [  6,  42, 336]])
+```
+### Methods for Boolean Arrays
+Boolean values are coerced to 1 (True) and 0 (False) in the preceding methods. Thus, `sum` is often used as a means of counting `True` values in a boolean array:
+```python
+In [136]:
+arr = np.random.randn(100)
+(arr > 0).sum() # Number of positive values
+Out[136]: 
+46
+```
