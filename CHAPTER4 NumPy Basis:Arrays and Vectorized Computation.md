@@ -656,3 +656,70 @@ arr = np.random.randn(100)
 Out[136]: 
 46
 ```
+There are two additional methods, `any` and `all`, useful especially for boolean arrays. `any` tests whether one or more values in an array is True, while `all` checks if every value is True:
+```python
+In [137]:
+bools = np.array([False, False, True, False])
+bools.any()
+bools.all()
+Out[137]: 
+Ture
+False
+```
+These methods also work with non-boolean arrays, where non-zero elements evaluate to `True`.
+### Sorting
+Like Python’s built-in list type, NumPy arrays can be sorted in-place with the `sort` method:
+```python
+In [137]:
+bools = np.array([False, False, True, False])
+bools.any()
+bools.all()
+Out[137]: 
+Ture
+False
+```
+You can sort each one-dimensional section of values in a multidimensional array inplace along an axis by passing the axis number to `sort`.
+The top-level method np.sort returns a sorted copy of an array instead of modifying the array in-place. A quick-and-dirty way to **compute the quantiles（分位数） of an array** is to sort it and select the value at a particular rank:
+```python
+In [138]:
+large_arr = np.random.randn(1000)
+large_arr.sort()
+large_arr[int(0.05 * len(large_arr))] # 5% quantile
+Out[138]: 
+-1.7423543611507841
+```
+### Unique and Other Set Logic
+NumPy has some basic set operations for one-dimensional ndarrays. A commonly used one is `np.unique`, which returns the sorted unique values in an array:
+```python
+In [139]:
+names = np.array(['Bob', 'Joe', 'Will', 'Bob', 'Will', 'Joe', 'Joe'])
+np.unique(names)
+Out[139]: 
+array(['Bob', 'Joe', 'Will'], dtype='<U4')
+```
+Contrast np.unique with the pure Python alternative:
+```python
+In [140]:
+sorted(set(names))
+Out[140]: 
+['Bob', 'Joe', 'Will']
+```
+Another function, np.in1d, tests membership of the values in one array in another, returning a boolean array:
+```python
+In [141]:
+values = np.array([6, 0, 0, 3, 2, 5, 6])
+np.in1d(values, [2, 3, 6])
+Out[141]: 
+array([ True, False, False,  True,  True, False,  True])
+```  
+
+Method | Description
+------------ | -------------
+`unique(x)` | Compute the sorted, unique elements in `x`
+`intersect1d(x, y)` | Compute the sorted, common elements in `x` and `y`
+`union1d(x, y)` | Compute the sorted union of elements
+`in1d(x, y)` | Compute a boolean array indicating whether each element of `x` is contained in `y`
+`setdiff1d(x, y)` | Set difference, elements in x that are not in y
+`setxor1d(x, y)` | Set symmetric differences; elements that are in either of the arrays, but not both  
+
+
