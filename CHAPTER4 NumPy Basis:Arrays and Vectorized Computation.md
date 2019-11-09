@@ -721,5 +721,7 @@ Method | Description
 `in1d(x, y)` | Compute a boolean array indicating whether each element of `x` is contained in `y`
 `setdiff1d(x, y)` | Set difference, elements in x that are not in y
 `setxor1d(x, y)` | Set symmetric differences; elements that are in either of the arrays, but not both  
-
+## 4.4 File Input and Output with Arrays
+NumPy is able to save and load data to and from disk either in text or binary format. In this section I only discuss NumPy’s built-in binary format, since most users will prefer pandas and other tools for loading text or tabular data (see Chapter 6 for much more).
+`np.save` and `np.load` are the two workhorse（主力） functions for efficiently saving and loading array data on disk. Arrays are saved by default in an uncompressed raw binary format with file extension .*npy*:
 
