@@ -1,3 +1,4 @@
+# CHAPTER 5 Getting Started with pandas
 pandas will be a major tool of interest throughout much of the rest of the book. It
 contains data structures and data manipulation tools designed to make data cleaning
 and analysis fast and easy in Python. pandas is often used in tandem with numerical
