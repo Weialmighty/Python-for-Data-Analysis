@@ -724,4 +724,141 @@ Method | Description
 ## 4.4 File Input and Output with Arrays
 NumPy is able to save and load data to and from disk either in text or binary format. In this section I only discuss NumPy’s built-in binary format, since most users will prefer pandas and other tools for loading text or tabular data (see Chapter 6 for much more).
 `np.save` and `np.load` are the two workhorse（主力） functions for efficiently saving and loading array data on disk. Arrays are saved by default in an uncompressed raw binary format with file extension .*npy*:
+## 4.5 Linear Algebra
+Linear algebra, like matrix multiplication, decompositions, determinants, and other
+square matrix math, is an important part of any array library. Unlike some languages
+like MATLAB, multiplying two two-dimensional arrays with * is an element-wise
+product instead of a matrix dot product. Thus, there is a function dot, both an array
+method and a function in the `numpy` namespace, for matrix multiplication:
+```python
+In [142]:
+x = np.array([[1., 2., 3.], [4., 5., 6.]])
+y = np.array([[6., 23.], [-1, 7], [8, 9]])
+x.dot(y)
+np.dot(x, y)
+Out[142]: 
+array([[ 28., 64.],
+[ 67., 181.]])
+```
+A matrix product between a two-dimensional array and a suitably sized onedimensional
+array results in a one-dimensional array:
+```python
+In [143]:
+x = np.array([[1., 2., 3.], [4., 5., 6.]])
+y = np.array([[6., 23.], [-1, 7], [8, 9]])
+x.dot(y)
+np.dot(x, y)
+x@y
+Out[143]: 
+array([[ 28., 64.],
+[ 67., 181.]])
+```
+`x.dot(y)` = `np.dot(x, y)` = `@`
+The @ symbol (as of Python 3.5) also works as an infix（中缀） operator that performs matrix multiplication  
+`numpy.linalg` has a standard set of matrix decompositions and things like inverse
+and determinant. These are implemented under the hood via the same industrystandard
+linear algebra libraries used in other languages like MATLAB and R, such as
+BLAS, LAPACK, or possibly (depending on your NumPy build) the proprietary Intel
+MKL (Math Kernel Library):
+```python
+In [144]:
+from numpy.linalg import inv, qr
+X = np.random.randn(5, 5)
+mat = X.T.dot(X)
+inv(mat)
+Out[144]: 
+array([[ 1.50045573,  0.96421443, -0.58487851, -1.59844377,  1.5148305 ],
+       [ 0.96421443,  1.54194226, -0.37632746, -1.34161244,  1.3858883 ],
+       [-0.58487851, -0.37632746,  0.61574491,  0.57835908, -0.56744799],
+       [-1.59844377, -1.34161244,  0.57835908,  2.09148955, -1.79254786],
+       [ 1.5148305 ,  1.3858883 , -0.56744799, -1.79254786,  1.94460257]])
+In[145]:
+mat.dot(inv(mat))
+Out[145]:
+array([[ 1.00000000e+00, -1.52148669e-16,  7.44633611e-16,
+         2.45180464e-17,  5.63083349e-16],
+       [ 2.21536196e-16,  1.00000000e+00,  2.59324460e-16,
+        -2.85732426e-16,  2.82387620e-16],
+       [-5.21083069e-16, -4.74230849e-17,  1.00000000e+00,
+         2.03563596e-16,  3.20131780e-16],
+       [-5.11924238e-16, -6.60934163e-16,  2.01398357e-16,
+         1.00000000e+00, -4.75951855e-16],
+       [-8.83147590e-16, -9.20440182e-16, -3.20421624e-16,
+        -2.08754600e-16,  1.00000000e+00]])
+In[146]:
+q, r = qr(mat)
+r
+Out[146]:
+array([[-7.65199291, -2.76002131, -1.99360209, -3.75604585,  4.07236325],
+       [ 0.        , -1.99597936,  0.67283043,  0.48021036,  2.26288813],
+       [ 0.        ,  0.        , -2.24321904,  0.40144981, -0.34577027],
+       [ 0.        ,  0.        ,  0.        , -2.97305843, -3.05340953],
+       [ 0.        ,  0.        ,  0.        ,  0.        ,  0.29447319]])
+```
+  
+  
+Function | Description
+------------ | -------------
+`diag` | Return the diagonal (or off-diagonal) elements of a square matrix as a 1D array, or convert a 1D array into a square matrix with zeros on the off-diagonal
+`dot` | Matrix multiplication
+`trace` | Compute the sum of the diagonal elements
+`det` | Compute the matrix determinant
+`eig` | Compute the eigenvalues and eigenvectors（特征值和特征向量） of a square matrix
+`pinv` | Compute the [Moore-Penrose pseudo-inverse](https://zh.wikipedia.org/wiki/%E6%91%A9%E5%B0%94%EF%BC%8D%E5%BD%AD%E8%8B%A5%E6%96%AF%E5%B9%BF%E4%B9%89%E9%80%86) of a matrix
+`qr` | Compute the [QR decomposition](https://zh.wikipedia.org/wiki/QR%E5%88%86%E8%A7%A3#%3A~%3AtargetText%3DQR%E5%88%86%E8%A7%A3%E6%B3%95%E6%98%AF%E4%B8%89%E7%A8%AE%2C%E5%8D%B3QR%E7%AE%97%E6%B3%95%E7%9A%84%E5%9F%BA%E7%A1%80%E3%80%82)
+`svd` | Compute the [singular value decomposition](https://zh.wikipedia.org/wiki/%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3) (SVD)（奇异值分解）
+`solve` | Solve the linear system Ax = b for x, where A is a square matrix
+`lstsq` | Compute the least-squares solution to Ax = b
+## 4.6 Pseudorandom Number Generation
+The `numpy.random` module supplements the built-in Python `random` with functions
+for efficiently generating whole arrays of sample values from many kinds of probability
+distributions. For example, you can get a 4 × 4 array of samples from the standard
+normal distribution using normal:
+Python’s built-in `random` module, by contrast, only samples one value at a time. As
+you can see from this benchmark, `numpy.random` is well over an order of magnitude
+faster for generating very large samples:
+```python
+In [147]:
+from random import normalvariate
+N = 1000000
+%timeit samples = [normalvariate(0, 1) for _ in range(N)]
+%timeit np.random.normal(size=N)
+Out[147]: 
+1.03 s ± 122 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+35.8 ms ± 2.37 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+```
+We say that these are pseudorandom numbers because they are generated by an algorithm
+with deterministic behavior based on the *seed* of the random number generator.
+You can change NumPy’s random number generation seed using
+`np.random.seed`:
+```python
+In [148]:
+np.random.seed(1234)
+rng = np.random.RandomState(1234)
+rng.randn(10)
+Out[148]: 
+array([ 0.47143516, -1.19097569,  1.43270697, -0.3126519 , -0.72058873,
+        0.88716294,  0.85958841, -0.6365235 ,  0.01569637, -2.24268495])
+```
+*Partial list of numpy.random functions*  
 
+Function | Description
+------------ | -------------
+`seed` | Seed the random number generator
+`permutation` | Return a random permutation of a sequence, or return a permuted range
+`shuffle` | Randomly permute（置换） a sequence in-place
+`rand` | Draw samples from a uniform distribution
+`randint` | Draw random integers from a given low-to-high range
+`randn` | Draw samples from a normal distribution with mean 0 and standard deviation 1 (MATLAB-like interface)
+`binomial` | Draw samples from a binomial distribution
+`normal` | Draw samples from a normal (Gaussian) distribution
+`beta` | Draw samples from a beta distribution
+`gamma` | Draw samples from a gamma distribution
+`uniform` | Draw samples from a uniform \[0, 1) distribution
+## 4.7 Example: Random Walks
+The simulation of random walks provides an illustrative application of utilizing array
+operations. Let’s first consider a simple random walk starting at 0 with steps of 1 and
+–1 occurring with equal probability.
+Here is a pure Python way to implement a single random walk with 1,000 steps using
+the built-in `random` module
+## 4.8 Conclusion
