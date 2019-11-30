@@ -1,4 +1,4 @@
-# CHAPTER 5 Getting Started with pandas
+# CHAPTER5 Getting Started with pandas
 pandas will be a major tool of interest throughout much of the rest of the book. It
 contains data structures and data manipulation tools designed to make data cleaning
 and analysis fast and easy in Python. pandas is often used in tandem with numerical
@@ -17,3 +17,5 @@ community has grown to over 800 distinct contributors, who’ve been helping bui
 the project as they’ve used it to solve their day-to-day data problems.  
 
 Throughout the rest of the book, I use the following import convention for pandas:
+```python
+In[]
