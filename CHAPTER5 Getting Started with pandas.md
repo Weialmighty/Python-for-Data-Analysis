@@ -208,3 +208,133 @@ Out[162]:
 3	Nevada	2001	2.4
 4	Nevada	2002	2.9
 ```
+If you specify a sequence of columns, the DataFrame’s columns will be arranged in
+that order:
+```python3
+In[163]:
+pd.DataFrame(data, columns=['year', 'state', 'pop'])
+Out[163]:
+        year	state	pop
+0	2000	Ohio	1.5
+1	2001	Ohio	1.7
+2	2002	Ohio	3.6
+3	2001	Nevada	2.4
+4	2002	Nevada	2.9
+5	2003	Nevada	3.2
+```
+If you pass a column that isn’t contained in the dict, it will appear with missing values
+in the result:
+```python3
+In[164]:
+frame2 = pd.DataFrame(data, columns=['year', 'state', 'pop', 'debt'], index=['one', 'two', 'three', 'four', 'five', 'six'])
+frame2
+Out[164]:
+        year	state	pop	debt
+one	2000	Ohio	1.5	NaN
+two	2001	Ohio	1.7	NaN
+three	2002	Ohio	3.6	NaN
+four	2001	Nevada	2.4	NaN
+five	2002	Nevada	2.9	NaN
+six	2003	Nevada	3.2	NaN
+In[165]:
+frame2.columns
+Out[165]:
+Index(['year', 'state', 'pop', 'debt'], dtype='object')
+```
+A column in a DataFrame can be retrieved as a Series either by dict-like notation or
+by attribute:
+```python3
+In[165]:
+frame2['state']
+frame2.state
+Out[165]:
+one        Ohio
+two        Ohio
+three      Ohio
+four     Nevada
+five     Nevada
+six      Nevada
+Name: state, dtype: object
+```
+Note that the returned Series have the same index as the DataFrame, and their `name`
+attribute has been appropriately set.
+Rows can also be retrieved by position or name with the special `loc` attribute (much
+more on this later):
+```python3
+In[165]:
+frame2.loc['three']
+Out[165]:
+year     2002
+state    Ohio
+pop       3.6
+debt      NaN
+Name: three, dtype: object
+```
+Columns can be modified by assignment. For example, the empty `'debt'` column
+could be assigned a scalar value or an array of values:
+```python3
+In[166]:
+frame2['debt'] = 16.5
+frame2
+Out[166]:
+        year	state	pop	debt
+one	2000	Ohio	1.5	16.5
+two	2001	Ohio	1.7	16.5
+three	2002	Ohio	3.6	16.5
+four	2001	Nevada	2.4	16.5
+five	2002	Nevada	2.9	16.5
+six	2003	Nevada	3.2	16.5
+In[167]:
+frame2['debt'] = np.arange(6.)
+frame2
+Out[167]:
+	year	state	pop	debt
+one	2000	Ohio	1.5	0.0
+two	2001	Ohio	1.7	1.0
+three	2002	Ohio	3.6	2.0
+four	2001	Nevada	2.4	3.0
+five	2002	Nevada	2.9	4.0
+six	2003	Nevada	3.2	5.0
+```
+When you are assigning lists or arrays to a column, the value’s length must match the
+length of the DataFrame. If you assign a Series, its labels will be realigned exactly to
+the DataFrame’s index, inserting missing values in any holes:
+```python3
+In[168]:
+val = pd.Series([-1.2, -1.5, -1.7], index=['two', 'four', 'five'])
+frame2['debt'] = val
+frame2
+Out[168]:
+	year	state	pop	debt
+one	2000	Ohio	1.5	NaN
+two	2001	Ohio	1.7	-1.2
+three	2002	Ohio	3.6	NaN
+four	2001	Nevada	2.4	-1.5
+five	2002	Nevada	2.9	-1.7
+six	2003	Nevada	3.2	NaN
+```
+Assigning a column that doesn’t exist will create a new column. The `del` keyword will
+delete columns as with a dict.
+As an example of del, I first add a new column of boolean values where the `state`
+column equals 'Ohio':
+```python3
+In[169]:
+frame2['eastern'] = frame2.state == 'Ohio'
+frame2
+Out[169]:
+	year	state	pop	debt	eastern
+one	2000	Ohio	1.5	NaN	True
+two	2001	Ohio	1.7	-1.2	True
+three	2002	Ohio	3.6	NaN	True
+four	2001	Nevada	2.4	-1.5	False
+five	2002	Nevada	2.9	-1.7	False
+six	2003	Nevada	3.2	NaN	False
+```
+The `del` method can then be used to remove this column:
+```python3
+In[170]:
+del frame2['eastern']
+frame2.columns
+Out[170]:
+Index(['year', 'state', 'pop', 'debt'], dtype='object')
+```
