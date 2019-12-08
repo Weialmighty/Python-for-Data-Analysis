@@ -344,3 +344,149 @@ pop = {'Nevada': {2001: 2.4, 2002: 2.9},
        'Ohio': {2000: 1.5, 2001: 1.7, 2002: 3.6}}
 ```
 If the nested dict is passed to the DataFrame, pandas will interpret the outer dict keys as the columns and the inner keys as the row indices:
+```python3
+In[171]:
+frame3 = pd.DataFrame(pop)
+frame3
+Out[171]:
+	Nevada	Ohio
+2000	NaN	1.5
+2001	2.4	1.7
+2002	2.9	3.6
+```
+You can transpose the DataFrame (swap rows and columns) with similar syntax to a
+NumPy array:
+```python3
+In[172]:
+frame3.T
+Out[172]:
+	2000	2001	2002
+Nevada	NaN	2.4	2.9
+Ohio	1.5	1.7	3.6
+```
+The keys in the inner dicts are combined and sorted to form the index in the result.
+This isn’t true if an explicit index is specified:
+```python3
+In[173]:
+pd.DataFrame(pop, index=[2001, 2002, 2003])
+Out[173]:
+	Nevada	Ohio
+2001	2.4	1.7
+2002	2.9	3.6
+2003	NaN	NaN
+```
+Dicts of Series are treated in much the same way:
+```python3
+In[174]:
+pdata = {'Ohio': frame3['Ohio'][:-1],
+	 'Nevada': frame3['Nevada'][:2]}
+pd.DataFrame(pdata)
+Out[174]:
+	Nevada	Ohio
+2001	2.4	1.7
+2002	2.9	3.6
+2003	NaN	NaN
+```
+If a DataFrame’s `index` and `columns` have their `name` attributes set, these will also be
+displayed:
+```python3
+In[175]:
+frame3.index.name = 'year'; frame3.columns.name = 'state'
+frame3
+Out[175]:
+state	Nevada	Ohio
+year		
+2000	NaN	1.5
+2001	2.4	1.7
+2002	2.9	3.6
+```
+As with Series, the values attribute returns the data contained in the DataFrame as a
+two-dimensional ndarray:
+```python3
+In[176]:
+frame3.values
+Out[176]:
+array([[nan, 1.5],
+       [2.4, 1.7],
+       [2.9, 3.6]])
+```
+If the DataFrame’s columns are different dtypes, the dtype of the values array will be
+chosen to accommodate all of the columns:
+```python3
+In[177]:
+frame2.values
+Out[177]:
+array([[2000, 'Ohio', 1.5, nan],
+       [2001, 'Ohio', 1.7, -1.2],
+       [2002, 'Ohio', 3.6, nan],
+       [2001, 'Nevada', 2.4, -1.5],
+       [2002, 'Nevada', 2.9, -1.7],
+       [2003, 'Nevada', 3.2, nan]], dtype=object)
+```
+*Table 5-1. Possible data inputs to DataFrame construtor*  
+
+Type | Notes
+------------ | -------------
+2D ndarray | A matrix of data, passing optional row and column labels
+dict of arrays, lists, or tuples | Each sequence becomes a column in the DataFrame; all sequences must be the same length
+NumPy structured/record array | Treated as the “dict of arrays” case
+dict of Series | Each value becomes a column; indexes from each Series are unioned together to form the result’s row index if no explicit index is passed
+dict of dicts | Each inner dict becomes a column; keys are unioned to form the row index as in the “dict of Series” case
+List of dicts or Series | Each item becomes a row in the DataFrame; union of dict keys or Series indexes become the DataFrame’s column labels
+List of lists or tuples | Treated as the “2D ndarray” case
+Another DataFrame | The DataFrame’s indexes are used unless different ones are passed
+NumPy MaskedArray | Like the “2D ndarray” case except masked values become NA/missing in the DataFrame result
+
+### Index Objects
+pandas’s Index objects are responsible for holding the axis labels and other metadata
+(like the axis name or names). Any array or other sequence of labels you use when
+constructing a Series or DataFrame is internally converted to an Index:
+```python3
+In[178]:
+obj = pd.Series(range(3), index=['a', 'b', 'c'])
+index = obj.index
+index
+Out[178]:
+Index(['a', 'b', 'c'], dtype='object')
+```
+**Index objects are immutable and thus can’t be modified by the user:**
+`TypeError: Index does not support mutable operations`
+Immutability makes it safer to share Index objects among data structures:
+```python3
+In[179]:
+labels = pd.Index(np.arange(3))
+labels
+Out[179]:
+Int64Index([0, 1, 2], dtype='int64')
+In[180]:
+obj2 = pd.Series([1.5, -2.5, 0], index=labels)
+obj2
+Out[180]:
+0    1.5
+1   -2.5
+2    0.0
+dtype: float64
+```
+In addition to being array-like, an Index also behaves like a fixed-size set:
+Unlike Python sets, a pandas Index can contain duplicate labels:
+```python3
+In[181]:
+dup_labels = pd.Index(['foo', 'foo', 'bar', 'bar'])
+dup_labels
+Out[181]:
+Index(['foo', 'foo', 'bar', 'bar'], dtype='object')
+```
+*Table 5-2. Some Index methods and properties*  
+
+Method | Description
+------------ | -------------
+`append` | Concatenate with additional Index objects, producing a new Index
+`difference` | Compute set difference as an Index
+`intersection` | Compute set intersection
+`union` | Compute set union
+`isin` | Compute boolean array indicating whether each value is contained in the passed collection
+`drop` | Compute new Index by deleting passed values
+`insert` | Compute new Index by inserting element at index i
+`is_monotonic（单调的）` | Returns True if each element is greater than or equal to the previous element
+`is_unique` | Returns True if the Index has no duplicate values
+`unique` | Compute the array of unique values in the Index
