@@ -338,3 +338,9 @@ frame2.columns
 Out[170]:
 Index(['year', 'state', 'pop', 'debt'], dtype='object')
 ```
+Another common form of data is a nested dict of dicts:
+```python3
+pop = {'Nevada': {2001: 2.4, 2002: 2.9},
+       'Ohio': {2000: 1.5, 2001: 1.7, 2002: 3.6}}
+```
+If the nested dict is passed to the DataFrame, pandas will interpret the outer dict keys as the columns and the inner keys as the row indices:
