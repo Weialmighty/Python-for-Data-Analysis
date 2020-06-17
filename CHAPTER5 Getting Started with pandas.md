@@ -599,8 +599,7 @@ d	7.0	NaN	8.0
 
 Method | Description
 ------------ | -------------
-`index` | New sequence to use as index. Can be Index instance or any other sequence-like Python data structure. An
-Index will be used exactly as is without any copying.
+`index` | New sequence to use as index. Can be Index instance or any other sequence-like Python data structure. An Index will be used exactly as is without any copying.
 `method` | Interpolation (fill) method; 'ffill' fills forward, while 'bfill' fills backward.
 `fill_value` | Substitute value to use when introducing missing data by reindexing.
 `limit` | When forward- or backfilling, maximum size gap (in number of elements) to fill.
