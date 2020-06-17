@@ -490,3 +490,26 @@ Method | Description
 `is_monotonic（单调的）` | Returns True if each element is greater than or equal to the previous element
 `is_unique` | Returns True if the Index has no duplicate values
 `unique` | Compute the array of unique values in the Index
+
+## 5.2 Essential Functionality
+In the chapters to come, we will delve more
+deeply into data analysis and manipulation topics using pandas. This book is not
+intended to serve as exhaustive(详尽的) documentation for the pandas library; instead, we’ll
+focus on the most important features, leaving the less common (i.e., more esoteric 深奥)
+things for you to explore on your own.
+### Reindexing
+An important method on pandas objects is `reindex`, which means to create a new
+object with the data *conformed* to a new index. Consider an example:
+```python3
+In[182]:
+obj = pd.Series([4.5, 7.2, -5.3, 3.6], index=['d', 'b', 'a', 'c'])
+obj
+Out[182]:
+d    4.5
+b    7.2
+a   -5.3
+c    3.6
+dtype: float64
+```
+Calling `reindex` on this Series rearranges the data according to the new index, introducing
+missing values if any index values were not already present:
