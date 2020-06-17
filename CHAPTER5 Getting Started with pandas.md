@@ -606,6 +606,5 @@ Index will be used exactly as is without any copying.
 `limit` | When forward- or backfilling, maximum size gap (in number of elements) to fill.
 `tolerance` | When forward- or backfilling, maximum size gap (in absolute numeric distance) to fill for inexact matches.
 `level` | Match simple Index on level of MultiIndex; otherwise select subset of.
-`copy` | If True, always copy underlying data even if new index is equivalent to old index; if False, do not copy
-the data when the indexes are equivalent.
+`copy` | If True, always copy underlying data even if new index is equivalent to old index; if False, do not copy the data when the indexes are equivalent.
 
