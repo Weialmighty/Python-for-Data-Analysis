@@ -513,3 +513,99 @@ dtype: float64
 ```
 Calling `reindex` on this Series rearranges the data according to the new index, introducing
 missing values if any index values were not already present:
+```python3
+In[183]:
+obj2 = obj.reindex(['a', 'b', 'c', 'd', 'e'])
+obj2
+Out[183]:
+a   -5.3
+b    7.2
+c    3.6
+d    4.5
+e    NaN
+dtype: float64
+```
+For ordered data like time series, it may be desirable to do some interpolation（插值） or filling
+of values when reindexing. The `method` option allows us to do this, using a
+method such as `ffill`, which forward-fills the values:
+```python3
+In[184]:
+obj3 = pd.Series(['blue', 'purple', 'yellow'], index=[0, 2, 4])
+obj3
+Out[184]:
+0      blue
+2    purple
+4    yellow
+dtype: object
+```
+```python3
+In[185]:
+obj3.reindex(range(6), method='ffill')
+Out[185]:
+0      blue
+1      blue
+2    purple
+3    purple
+4    yellow
+5    yellow
+dtype: object
+```
+With DataFrame, `reindex` can alter either the (row) index, columns, or both. When
+passed only a sequence, it reindexes the rows in the result:
+```python3
+In[186]:
+frame = pd.DataFrame(np.arange(9).reshape((3, 3)), index=['a', 'c', 'd'], columns=['Ohio', 'Texas', 'California'])
+frame
+Out[186]:
+        Ohio	Texas	California
+a	0	1	2
+c	3	4	5
+d	6	7	8
+In[187]:
+frame2 = frame.reindex(['a', 'b', 'c', 'd'])
+frame2
+Out[187]:
+        Ohio	Texas	California
+a	0.0	1.0	2.0
+b	NaN	NaN	NaN
+c	3.0	4.0	5.0
+d	6.0	7.0	8.0
+```
+The columns can be reindexed with the `columns` keyword:
+```python3
+In[188]:
+states = ['Texas', 'Utah', 'California']
+frame.reindex(columns=states)
+Out[188]:
+        Texas	Utah	California
+a	1	NaN	2
+c	4	NaN	5
+d	7	NaN	8
+```
+See Table 5-3 for more about the arguments to `reindex`.  
+As we’ll explore in more detail, you can reindex more succinctly by label-indexing
+with loc, and many users prefer to use it exclusively:
+```python3
+In[189]:
+frame.loc[['a', 'b', 'c', 'd'], states]
+Out[189]:
+        Texas	Utah	California
+a	1.0	NaN	2.0
+b	NaN	NaN	NaN
+c	4.0	NaN	5.0
+d	7.0	NaN	8.0
+```
+*Table 5-3. Reindex function arguments*  
+
+Method | Description
+------------ | -------------
+`index` | New sequence to use as index. Can be Index instance or any other sequence-like Python data structure. An
+Index will be used exactly as is without any copying.
+`method` | Interpolation (fill) method; 'ffill' fills forward, while 'bfill' fills backward.
+`fill_value` | Substitute value to use when introducing missing data by reindexing.
+`limit` | When forward- or backfilling, maximum size gap (in number of elements) to fill.
+`tolerance` | When forward- or backfilling, maximum size gap (in absolute numeric distance) to fill for inexact matches.
+`level` | Match simple Index on level of MultiIndex; otherwise select subset of.
+`copy` | If True, always copy underlying data even if new index is equivalent to old index; if False, do not copy
+the data when the indexes are equivalent.
+
