@@ -605,5 +605,43 @@ Method | Description
 `limit` | When forward- or backfilling, maximum size gap (in number of elements) to fill.
 `tolerance` | When forward- or backfilling, maximum size gap (in absolute numeric distance) to fill for inexact matches.
 `level` | Match simple Index on level of MultiIndex; otherwise select subset of.
-`copy` | If True, always copy underlying data even if new index is equivalent to old index; if False, do not copy the data when the indexes are equivalent.
-
+`copy` | If True, always copy underlying data even if new index is equivalent to old index; if False, do not copy the data when the indexes are equivalent.  
+### Dropping Entries from an Axis
+Dropping one or more entries（词条） from an axis is easy if you already have an index array
+or list without those entries. As that can require a bit of munging（数组转换） and set logic, the
+ `drop` method will return a new object with the indicated value or values deleted from
+an axis:
+```python3
+In[190]:
+obj = pd.Series(np.arange(5.), index=['a', 'b', 'c', 'd', 'e'])
+obj
+Out[190]:
+a    0.0
+b    1.0
+c    2.0
+d    3.0
+e    4.0
+dtype: float64
+```
+```python3
+In[191]:
+new_obj = obj.drop('c')
+new_obj
+Out[191]:
+a    0.0
+b    1.0
+d    3.0
+e    4.0
+dtype: float64
+```
+```python3
+In[192]:
+obj.drop(['d', 'c'])
+Out[192]:
+a    0.0
+b    1.0
+e    4.0
+dtype: float64
+```
+With DataFrame, index values can be deleted from either axis. To illustrate this, we
+first create an example DataFrame:
