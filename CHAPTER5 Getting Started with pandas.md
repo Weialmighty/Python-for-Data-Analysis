@@ -645,3 +645,58 @@ dtype: float64
 ```
 With DataFrame, index values can be deleted from either axis. To illustrate this, we
 first create an example DataFrame:
+```python3
+In[193]:
+data = pd.DataFrame(np.arange(16).reshape((4, 4)), index=['Ohio', 'Colorado', 'Utah', 'New York'], columns=['one', 'two', 'three', 'four'])
+data
+Out[193]:
+	       one	two	three	four
+Ohio	       0	1	2	3
+Colorado       4	5	6	7
+Utah	       8	9	10	11
+New York       12	13	14	15
+```
+Calling `drop` with a sequence of labels will drop values from the row labels (axis 0):
+```python3
+In[194]:
+data.drop(['Colorado', 'Ohio'])
+Out[194]:
+               one	two	three	four
+Utah	       8	9	10	11
+New York       12	13	14	15
+```
+You can drop values from the columns by passing `axis=1` or `axis='columns'`:
+```python3
+In[195]:
+data.drop('two', axis=1)
+Out[195]:
+ 	       one	three	four
+Ohio	       0	2	3
+Colorado       4	6	7
+Utah           8	10	11
+New York       12	14	15
+```
+```python3
+In[196]:
+data.drop(['two', 'four'], axis='columns')
+Out[196]:
+ 	       one	three
+Ohio	       0	2
+Colorado       4	6
+Utah	       8	10
+New York       12	14
+```
+Many functions, like `drop`, which modify the size or shape of a Series or DataFrame,
+can manipulate an object `inplace` without returning a new object:
+```python3
+In[197]:
+obj.drop('c', inplace=True)
+obj
+Out[197]:
+a    0.0
+b    1.0
+d    3.0
+e    4.0
+dtype: float64
+```
+*Be careful with the `inplace`, as it destroys any data that is dropped.*
