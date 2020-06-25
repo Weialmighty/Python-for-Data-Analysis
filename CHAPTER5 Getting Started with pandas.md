@@ -699,4 +699,87 @@ d    3.0
 e    4.0
 dtype: float64
 ```
-*Be careful with the `inplace`, as it destroys any data that is dropped.*
+*Be careful with the `inplace`, as it destroys any data that is dropped.*  
+### Indexing, Selection, and Filtering
+Series indexing (obj\[...\]) works analogously（类似的，近似的） to NumPy array indexing, except you
+can use the Series’s index values instead of only integers. Here are some examples of
+this:
+```python3
+In[198]:
+obj = pd.Series(np.arange(4.), index=['a', 'b', 'c', 'd'])
+obj
+Out[198]:
+a    0.0
+b    1.0
+c    2.0
+d    3.0
+dtype: float64
+```
+Slicing with labels behaves differently than normal Python slicing in that the endpoint
+is inclusive:
+```python3
+In[199]:
+obj['b':'c']
+Out[199]:
+b    1.0
+c    2.0
+dtype: float64
+```
+Setting using these methods modifies the corresponding section of the Series:
+```python3
+In[200]:
+obj['b':'c'] = 5
+obj
+Out[200]:
+a    0.0
+b    5.0
+c    5.0
+d    3.0
+dtype: float64
+```
+Indexing into a DataFrame is for retrieving（检索） one or more columns either with a single
+value or sequence:
+```python3
+In[201]:
+data = pd.DataFrame(np.arange(16).reshape((4, 4)), index=['Ohio', 'Colorado', 'Utah', 'New York'], columns=['one', 'two', 'three', 'four'])
+data
+Out[201]:
+	        one	two	three	four
+Ohio	        0	1	2	3
+Colorado	4	5	6	7
+Utah	        8	9	10	11
+New York	12	13	14	15
+In[202]:
+data['two']
+Out[202]:
+Ohio         1
+Colorado     5
+Utah         9
+New York    13
+Name: two, dtype: int64
+In[203]:
+data[['three', 'one']]
+Out[203]:
+                three	one
+Ohio	        2	0
+Colorado	6	4
+Utah	        10	8
+New York	14	12
+```
+Indexing like this has a few special cases. First, slicing or selecting data with a boolean
+array:
+```python3
+In[204]:
+data[:2]
+Out[204]:
+	        one	two	three	four
+Ohio	        0	1	2	3
+Colorado	4	5	6	7
+In[205]:
+data[data['three'] > 5]
+Out[205]:
+                one	two	three	four
+Colorado	4	5	6	7
+Utah	        8	9	10	11
+New York	12	13	14	15
+```
